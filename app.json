@@ -11,8 +11,14 @@
       {
         "origin": "https://n"
       }
-    ]
+    ],
+    "expo-web-browser",
+    "@react-native-google-signin/google-signin"
   ],
   "name": "ai-expense-manager",
-  "slug": "ai-expense-manager"
+  "slug": "ai-expense-manager",
+  "expo": {
+    "scheme": "ai-expense-manager",
+    "platforms": ["ios", "android", "web"]
+  }
 }
