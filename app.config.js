@@ -16,6 +16,19 @@ export default {
     },
     ios: {
       bundleIdentifier: "com.anonymous.aiexpensemanager"
-    }
+    },
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    runtimeVersion: "1.0.0",
+    updates: {
+      enabled: false
+      },
+    assetBundlePatterns: ["**/*"],
+    extra: {
+      eas: {
+        projectId: "5ee44fc4-05a4-4c48-b813-b3c70bedc2bf",
+      },
+    },
   }
 }
