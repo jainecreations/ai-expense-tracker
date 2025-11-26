@@ -43,7 +43,7 @@ export default function ProfileScreen() {
         <Text className="text-gray-500 mb-3">{user?.email}</Text>
       </View>
 
-      {/* Options */}
+      {/* More Options */}
       <View className="mt-6 mx-5 bg-white rounded-2xl shadow overflow-hidden">
         {/* <TouchableOpacity
           className="flex-row items-center px-6 py-4 border-b border-gray-100"
