@@ -37,3 +37,9 @@ export const deleteTransactionFromSupabase = async (id: string) => {
   if (error) throw error;
   return data;
 };
+
+export const updateTransactionInSupabase = async (id: string, updates: Partial<TransactionInput>) => {
+  const { data, error } = await supabase.from("transactions").update(updates).eq("id", id).select();
+  if (error) throw error;
+  return data;
+};

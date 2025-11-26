@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Pressable, Alert, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 type IoniconName = ComponentProps<typeof Ionicons>["name"];
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import DateInput from "@/components/date-input";
 import { useTransactionStore } from "@/store/transactionStore";
 import { useAuthStore } from "@/store/authStore";
@@ -17,8 +17,13 @@ type Category = {
 export default function AddExpenseScreen() {
   const router = useRouter();
   const addTransaction = useTransactionStore((state) => state.addTransaction);
+  const updateTransaction = useTransactionStore((state) => (state as any).updateTransaction);
+  const transactions = useTransactionStore((state) => state.transactions);
   const isSaving = useTransactionStore((state) => state.isSaving);
+  const { id } = useLocalSearchParams();
   const user = useAuthStore((s) => s.user);
+
+  const isEditing = Boolean(id);
 
   const categories: Category[] = [
     { name: "Food", icon: "restaurant-outline", color: "#e0583b" },
@@ -39,27 +44,45 @@ export default function AddExpenseScreen() {
   const handleSave = async () => {
     if (!amount || !selectedCategory || isSaving) return Alert.alert("Error", "Please fill amount and category.");
     const transaction = {
-      name: selectedCategory.name,
+      name: title || selectedCategory.name,
       amount: parseFloat(amount),
       date: date.toISOString(),
       category: selectedCategory.name,
       user_id: user?.id,
     };
+    console.log("Saving transaction:", transaction);
     try {
-      await addTransaction(transaction); // store handles saving flag + supabase call
+      if (id) {
+        // editing existing transaction
+        await updateTransaction(id as string, transaction);
+      } else {
+        await addTransaction(transaction); // store handles saving flag + supabase call
+      }
       router.back();
     } catch (err) {
       console.log(err);
       Alert.alert("Error", "Failed to save transaction. Please try again.");
     }
   };
+
+  // Prefill when editing
+  useEffect(() => {
+    if (!id) return;
+    const tx = transactions.find((t) => String(t.id) === String(id)) as any;
+    if (!tx) return;
+    setAmount(String(tx.amount || ""));
+    setTitle(tx.title || tx.name || "");
+    setDate(tx.date ? new Date(tx.date) : new Date());
+    const cat = categories.find((c) => c.name === (tx.category || tx.name));
+    if (cat) setSelectedCategory(cat);
+  }, [id, transactions]);
   return (
     <ScrollView className="flex-1 px-5 py-8 bg-[#f5f8fd]">
       <View>
         {/* Header */}
         <View className="flex-row items-center my-4">
           <Ionicons onPress={() => router.back()} name="arrow-back-outline" size={24} color="#000" />
-          <Text className="flex-1 text-center text-2xl font-bold">Add Expense</Text>
+          <Text className="flex-1 text-center text-2xl font-bold">{isEditing ? "Edit Expense" : "Add Expense"}</Text>
         </View>
 
         {/* Amount */}
@@ -121,7 +144,7 @@ export default function AddExpenseScreen() {
               <Text className="ml-3 text-center text-lg font-semibold text-white">Saving...</Text>
             </View>
           ) : (
-            <Text className="text-center text-lg font-semibold text-white">Save Expense</Text>
+            <Text className="text-center text-lg font-semibold text-white">{isEditing ? "Update Expense" : "Save Expense"}</Text>
           )}
         </TouchableOpacity>
       </View>

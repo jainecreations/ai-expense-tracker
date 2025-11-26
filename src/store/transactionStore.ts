@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TransactionInput, addTransactionToSupabase, deleteTransactionFromSupabase, fetchTransactionsFromSupabase } from "../lib/transactionService";
+import { TransactionInput, addTransactionToSupabase, deleteTransactionFromSupabase, fetchTransactionsFromSupabase, updateTransactionInSupabase } from "../lib/transactionService";
 import { useAuthStore } from "@/store/authStore";
 
 type Transaction = TransactionInput & { id?: string };
@@ -26,6 +26,16 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
             // supabase returns inserted rows; take the first one
             const newItem = Array.isArray(inserted) ? inserted[0] : inserted;
             set((state) => ({ transactions: [newItem, ...state.transactions] }));
+        } finally {
+            set({ isSaving: false });
+        }
+    },
+    updateTransaction: async (id: string, updates: Partial<TransactionInput>) => {
+        set({ isSaving: true });
+        try {
+            const updated = await updateTransactionInSupabase(id, updates);
+            const updatedItem = Array.isArray(updated) ? updated[0] : updated;
+            set((state) => ({ transactions: state.transactions.map((t) => (t.id === id ? updatedItem : t)) }));
         } finally {
             set({ isSaving: false });
         }

@@ -17,6 +17,7 @@ type IoniconName = ComponentProps<typeof Ionicons>["name"];
 import { useTransactionStore } from "@/store/transactionStore";
 import { getCategoryColor, getCategoryIcon } from "@/utils/helper";
 import { useEffect, useState, useCallback, useMemo } from "react";
+import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 
 export default function RecentTransactions() {
@@ -26,6 +27,7 @@ export default function RecentTransactions() {
   const deleteTransaction = useTransactionStore((state) => state.deleteTransaction);
   const isLoading = useTransactionStore((state) => state.isLoading);
   const deletingIds = useTransactionStore((state) => state.deletingIds);
+  const router = useRouter();
 
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -151,24 +153,26 @@ export default function RecentTransactions() {
           data={visibleTransactions}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View>
-              <View className="flex-row items-center justify-between py-3">
-                <View className="flex-row items-center">
-                  <View className="w-12 h-12 rounded-full mr-3 flex items-center justify-center" style={{ backgroundColor: getCategoryColor(item.name) }}>
-                    <Ionicons name={getCategoryIcon(item.name) as IoniconName} size={20} color="#fff" />
+            <Pressable onPress={() => router.push(`/transaction/${item.id}`)}>
+              <View>
+                <View className="flex-row items-center justify-between py-3">
+                  <View className="flex-row items-center">
+                    <View className="w-12 h-12 rounded-full mr-3 flex items-center justify-center" style={{ backgroundColor: getCategoryColor(item.name) }}>
+                      <Ionicons name={getCategoryIcon(item.name) as IoniconName} size={20} color="#fff" />
+                    </View>
+                    <View>
+                      <Text className="text-gray-800 font-medium">{item.name}</Text>
+                      <Text className="text-gray-400 text-sm">{item.date}</Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text className="text-gray-800 font-medium">{item.name}</Text>
-                    <Text className="text-gray-400 text-sm">{item.date}</Text>
-                  </View>
-                </View>
 
-                <View className="flex-row items-center">
-                  <Text className="text-gray-900 font-bold">₹{(item.amount || 0).toFixed(0)}</Text>
+                  <View className="flex-row items-center">
+                    <Text className="text-gray-900 font-bold">₹{(item.amount || 0).toFixed(0)}</Text>
+                  </View>
                 </View>
+                <View className="h-px bg-gray-200" />
               </View>
-              <View className="h-px bg-gray-200" />
-            </View>
+            </Pressable>
           )}
           refreshControl={
             <RefreshControl
