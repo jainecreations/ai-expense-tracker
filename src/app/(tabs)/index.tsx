@@ -19,7 +19,15 @@ export default function HomeScreen() {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const transactions = useTransactionStore((state) => state.transactions);
-  const totalExpenses = transactions.reduce((sum, txn) => sum + txn.amount, 0).toFixed(2);
+  // monthly expenses: sum transactions for current month/year
+  const now = new Date();
+  const monthlyExpenses = transactions
+    .filter((tx) => {
+      const d = new Date((tx as any).date || (tx as any).created_at || (tx as any).timestamp || (tx as any).time);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    })
+    .reduce((sum, txn) => sum + (txn.amount || 0), 0)
+    .toFixed(2);
   const loadTransactions = useTransactionStore((state) => state.loadTransactions);
   
     useEffect(() => {
@@ -49,8 +57,8 @@ export default function HomeScreen() {
         Monthly Summary
       </Text> */}
       <View className={`${classFor('bg-neutral-800', 'bg-white')} shadow-md rounded-2xl p-6 mx-4 my-4 items-center`}>
-        <Text className={classFor('text-3xl font-bold text-white mb-2','text-3xl font-bold text-gray-800 mb-2')}>
-          ₹{totalExpenses}
+          <Text className={classFor('text-3xl font-bold text-white mb-2','text-3xl font-bold text-gray-800 mb-2')}>
+          ₹{monthlyExpenses}
         </Text>
         <Text className={classFor('text-gray-500 text-sm','text-neutral-700 text-sm')}>
           Total Expenses This Month
