@@ -7,8 +7,12 @@ export type Category = {
 };
 
 export const categories: Category[] = [
-  { id: "1", name: "Groceries", icon: "shopping-cart", color: "#4ade80" },
-  { id: "2", name: "Utilities", icon: "flash-on", color: "#facc15" },
-  { id: "3", name: "Dining Out", icon: "restaurant", color: "#f87171" },
+  { id: "1",  name: "Food", icon: "restaurant-outline", color: "#e0583b" },
+  { id: "2", name: "Travel", icon: "airplane-outline", color: "#34a853" },
+  { id: "3", name: "Shopping", icon: "cart-outline", color: "#fbbc05" },
+  { id: "4", name: "Bills", icon: "document-text-outline", color: "#4285f4" },
+  { id: "5", name: "Entertainment", icon: "film-outline", color: "#aa66cc" },
+  { id: "6", name: "Health", icon: "heart-outline", color: "#ff4444" },
+  { id: "7", name: "Misc", icon: "ellipsis-horizontal-outline", color: "#9e9e9e" }
   // Add more as needed
 ];

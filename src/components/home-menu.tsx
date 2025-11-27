@@ -67,6 +67,15 @@ export default function HomeMenu({ visible, onClose }: HomeMenuProps) {
             className="py-3 px-4"
             onPress={() => {
               onClose();
+              router.push('/category-budgets');
+            }}
+          >
+            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Category Budgets</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="py-3 px-4"
+            onPress={() => {
+              onClose();
               router.push('/data-backup')
             }}
           >
