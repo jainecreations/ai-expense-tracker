@@ -43,6 +43,15 @@ export default function HomeMenu({ visible, onClose }: HomeMenuProps) {
           >
             <Text className="text-gray-800 text-base">Profile</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            className="py-3 px-4"
+            onPress={() => {
+              onClose();
+              router.push('/data-backup')
+            }}
+          >
+            <Text className="text-gray-800 text-base">Export PDF</Text>
+          </TouchableOpacity>
           <TouchableOpacity className="py-3 px-4" onPress={handleSignOut}>
             <Text className="text-gray-800 text-base">Sign Out</Text>
           </TouchableOpacity>
