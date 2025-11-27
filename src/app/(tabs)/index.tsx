@@ -7,6 +7,7 @@ import { getFirstName } from '@/utils/helper';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { useEffect, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -25,30 +26,33 @@ export default function HomeScreen() {
       loadTransactions();
     }, [user]);
 
+  const { resolved, classFor } = useResolvedTheme();
+  const statusBarStyle = resolved === 'dark' ? 'light' : 'dark';
+
   return (
-    <SafeAreaView className="flex-1 flex pt-4 bg-white">
-      <StatusBar style="dark" />
+    <SafeAreaView className={`flex-1 flex pt-4 ${classFor('bg-white','bg-neutral-900')}`}>
+      <StatusBar style={statusBarStyle} />
       <View className="flex-row justify-between items-center px-4 mb-4">
         <View className="mb-4">
-        <Text className="text-2xl font-bold text-gray-800 mb-1">
+        <Text className={classFor('text-2xl font-bold text-gray-800 mb-1','text-2xl font-bold text-white mb-1')}>
           Hi {getFirstName(user?.user_metadata?.full_name)} 👋
         </Text>
-        <Text>
+        <Text className={classFor('text-gray-500','text-neutral-300')}>
             Track smarter. Spend wiser.
         </Text>
         </View>
         <Pressable onPress={() => setMenuVisible(true)}>
-          <Ionicons name="person-circle-outline" size={32} />
+          <Ionicons color={classFor('bg-neutral-900','white')} name="person-circle-outline" size={32} />
         </Pressable>
       </View>
       {/* <Text className="text-xl font-bold text-center">
         Monthly Summary
       </Text> */}
-      <View className="bg-neutral-800 shadow-md rounded-2xl p-6 mx-4 my-4 items-center">
-        <Text className="text-3xl font-bold text-white mb-2">
+      <View className={`${classFor('bg-neutral-800', 'bg-white')} shadow-md rounded-2xl p-6 mx-4 my-4 items-center`}>
+        <Text className={classFor('text-3xl font-bold text-white mb-2','text-3xl font-bold text-gray-800 mb-2')}>
           ₹{totalExpenses}
         </Text>
-        <Text className="text-gray-500 text-sm">
+        <Text className={classFor('text-gray-500 text-sm','text-neutral-700 text-sm')}>
           Total Expenses This Month
         </Text>
       </View>

@@ -15,6 +15,7 @@ import {
 import { useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { Ionicons } from "@expo/vector-icons";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 
 export default function SignUpScreen() {
   const [name, setName] = useState("");
@@ -65,9 +66,11 @@ export default function SignUpScreen() {
     }
   };
 
+  const { classFor } = useResolvedTheme();
+
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white"
+      className={classFor('flex-1 bg-white','flex-1 bg-neutral-900')}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
@@ -77,16 +80,16 @@ export default function SignUpScreen() {
           contentContainerStyle={{ flexGrow: 1, justifyContent: "center", paddingHorizontal: 24, paddingVertical: 32 }}
           keyboardShouldPersistTaps="handled"
         >
-          <Text className="text-3xl font-bold mb-8 text-center text-gray-800">
+          <Text className={classFor('text-3xl font-bold mb-8 text-center text-gray-800','text-3xl font-bold mb-8 text-center text-white')}>
             Create Account
           </Text>
 
           {/* Full name */}
-          <Text className="text-gray-600 mb-2">Full name</Text>
-          <View className="flex-row items-center border border-gray-300 rounded-xl px-4 mb-4 bg-white">
+          <Text className={classFor('text-gray-600 mb-2','text-gray-300 mb-2')}>Full name</Text>
+          <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-4 bg-white','flex-row items-center border border-gray-700 rounded-xl px-4 mb-4 bg-neutral-800')}`}>
             <Ionicons name="person-outline" size={20} color="gray" />
             <TextInput
-              className="flex-1 py-3 px-2 text-lg text-gray-800"
+              className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
               placeholder="Your full name"
               placeholderTextColor="#9CA3AF"
               value={name}
@@ -95,11 +98,11 @@ export default function SignUpScreen() {
           </View>
 
           {/* Email */}
-          <Text className="text-gray-600 mb-2">Email</Text>
-          <View className="flex-row items-center border border-gray-300 rounded-xl px-4 mb-4 bg-white">
+          <Text className={classFor('text-gray-600 mb-2','text-gray-300 mb-2')}>Email</Text>
+          <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-4 bg-white','flex-row items-center border border-gray-700 rounded-xl px-4 mb-4 bg-neutral-800')}`}>
             <Ionicons name="mail-outline" size={20} color="gray" />
             <TextInput
-              className="flex-1 py-3 px-2 text-lg text-gray-800"
+              className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
               placeholder="Enter your email"
               placeholderTextColor="#9CA3AF"
               keyboardType="email-address"
@@ -110,11 +113,11 @@ export default function SignUpScreen() {
           </View>
 
           {/* Password */}
-          <Text className="text-gray-600 mb-2">Password</Text>
-          <View className="flex-row items-center border border-gray-300 rounded-xl px-4 mb-4 bg-white">
+          <Text className={classFor('text-gray-600 mb-2','text-gray-300 mb-2')}>Password</Text>
+          <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-4 bg-white','flex-row items-center border border-gray-700 rounded-xl px-4 mb-4 bg-neutral-800')}`}>
             <Ionicons name="lock-closed-outline" size={20} color="gray" />
             <TextInput
-              className="flex-1 py-3 px-2 text-lg text-gray-800"
+              className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
               placeholder="Create a password"
               placeholderTextColor="#9CA3AF"
               secureTextEntry
@@ -124,11 +127,11 @@ export default function SignUpScreen() {
           </View>
 
           {/* Confirm Password */}
-          <Text className="text-gray-600 mb-2">Confirm Password</Text>
-          <View className="flex-row items-center border border-gray-300 rounded-xl px-4 mb-6 bg-white">
+          <Text className={classFor('text-gray-600 mb-2','text-gray-300 mb-2')}>Confirm Password</Text>
+          <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-6 bg-white','flex-row items-center border border-gray-700 rounded-xl px-4 mb-6 bg-neutral-800')}`}>
             <Ionicons name="lock-closed-outline" size={20} color="gray" />
             <TextInput
-              className="flex-1 py-3 px-2 text-lg text-gray-800"
+              className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
               placeholder="Confirm your password"
               placeholderTextColor="#9CA3AF"
               secureTextEntry
@@ -161,7 +164,7 @@ export default function SignUpScreen() {
             onPress={() => router.push("/auth/signin")}
             className="mt-6"
           >
-            <Text className="text-center text-gray-600">
+            <Text className={classFor('text-center text-gray-600','text-center text-gray-300')}>
               Already have an account?{" "}
               <Text className="text-blue-600 font-semibold">Sign in</Text>
             </Text>

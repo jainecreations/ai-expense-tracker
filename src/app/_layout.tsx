@@ -3,7 +3,9 @@ import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Platform, useColorScheme } from "react-native";
+import { useThemeStore } from "@/store/themeStore";
+import SmsListener from "@/components/SmsListener";
 
 export default function Layout() {
   const { user, setUser, loading, setLoading } = useAuthStore();
@@ -28,6 +30,13 @@ export default function Layout() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  // load persisted theme on startup
+  useEffect(() => {
+    (async () => {
+      await useThemeStore.getState().loadAppearance();
+    })();
+  }, []);
+
   // ✅ Wait until mounted and loading is done before navigating
   useEffect(() => {
     if (!isMounted || loading) return;
@@ -40,16 +49,21 @@ export default function Layout() {
     return () => clearTimeout(timeout);
   }, [user, loading, isMounted]);
 
+  const appearance = useThemeStore((s) => s.appearance);
+  const sys = useColorScheme();
+  const resolved = appearance === 'system' ? (sys || 'light') : appearance;
+
   if (loading || !isMounted) {
     return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#000" />
+      <View className={`flex-1 justify-center items-center ${resolved === 'dark' ? 'bg-neutral-900' : 'bg-white'}`}>
+        <ActivityIndicator size="large" color={resolved === 'dark' ? '#fff' : '#000'} />
       </View>
     );
   }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
+      {Platform.OS === 'android' ? <SmsListener /> : null}
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="auth/signin" options={{ headerShown: false }} />
       <Stack.Screen

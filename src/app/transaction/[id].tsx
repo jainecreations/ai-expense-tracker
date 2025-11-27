@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTransactionStore } from "@/store/transactionStore";
 import { getCategoryColor, getCategoryIcon } from "@/utils/helper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 
 function formatDate(d?: string) {
   if (!d) return "-";
@@ -35,19 +36,21 @@ export default function TransactionDetails() {
   }, [id, transactions, isLoading]);
   const t = tx as any;
 
+  const { classFor } = useResolvedTheme();
+
   if (!tx) {
     // show loader while transactions are being fetched
     if (isLoading) {
       return (
-        <SafeAreaView className="flex-1 bg-white px-4 py-6 justify-center items-center">
+        <SafeAreaView className={`${classFor('flex-1 bg-white px-4 py-6 justify-center items-center','flex-1 bg-neutral-900 px-4 py-6 justify-center items-center')}`}>
           <ActivityIndicator size="large" />
         </SafeAreaView>
       );
     }
 
     return (
-      <SafeAreaView className="flex-1 bg-white px-4 py-6 justify-center items-center">
-        <Text className="text-gray-500">Transaction not found</Text>
+      <SafeAreaView className={`${classFor('flex-1 bg-white px-4 py-6 justify-center items-center','flex-1 bg-neutral-900 px-4 py-6 justify-center items-center')}`}>
+        <Text className={classFor('text-gray-500','text-gray-300')}>Transaction not found</Text>
       </SafeAreaView>
     );
   }
@@ -68,14 +71,14 @@ export default function TransactionDetails() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#f5f8fd]">
+    <SafeAreaView className={classFor('flex-1 bg-[#f5f8fd]','flex-1 bg-neutral-900')}>
       <ScrollView contentContainerStyle={{ padding: 20 }}>
         {/* Header with back button */}
         <View className="flex-row items-center mb-4">
           <Pressable onPress={() => router.back()}>
-            <Ionicons name="arrow-back-outline" size={22} color="#000" />
+            <Ionicons name="arrow-back-outline" size={22} color={classFor('#000','#fff') as any} />
           </Pressable>
-          <Text className="flex-1 text-center text-lg font-semibold">Transaction details</Text>
+          <Text className={classFor('flex-1 text-center text-lg font-semibold','flex-1 text-center text-lg font-semibold text-white')}>Transaction details</Text>
           <View style={{ width: 22 }} />
         </View>
         {/* Icon */}
@@ -87,30 +90,30 @@ export default function TransactionDetails() {
 
         {/* Amount and category */}
         <View className="items-center mb-6">
-          <Text className="text-4xl font-bold text-gray-900">₹{(tx.amount || 0).toFixed(2)}</Text>
-          <Text className="text-gray-600 mt-1">{tx.name}</Text>
+          <Text className={classFor('text-4xl font-bold text-gray-900','text-4xl font-bold text-white')}>₹{(tx.amount || 0).toFixed(2)}</Text>
+          <Text className={classFor('text-gray-600 mt-1','text-gray-300 mt-1')}>{tx.name}</Text>
         </View>
 
         {/* Details card */}
-        <View className="bg-white rounded-2xl p-4 shadow-lg mb-6">
+        <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg mb-6`}>
           <View className="mb-3">
-            <Text className="text-sm text-gray-500">Title</Text>
-            <Text className="text-gray-800 font-medium">{t?.title || tx.name}</Text>
+            <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Title</Text>
+            <Text className={classFor('text-gray-800 font-medium','text-white font-medium')}>{t?.title || tx.name}</Text>
           </View>
 
           <View className="mb-3">
-            <Text className="text-sm text-gray-500">Date</Text>
-            <Text className="text-gray-800">{formatDate(tx.date)}</Text>
+            <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Date</Text>
+            <Text className={classFor('text-gray-800','text-white')}>{formatDate(tx.date)}</Text>
           </View>
 
           <View className="mb-3">
-            <Text className="text-sm text-gray-500">Category</Text>
-            <Text className="text-gray-800">{tx.category || tx.name}</Text>
+            <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Category</Text>
+            <Text className={classFor('text-gray-800','text-white')}>{tx.category || tx.name}</Text>
           </View>
 
           <View>
-            <Text className="text-sm text-gray-500">Notes</Text>
-            <Text className="text-gray-800">{t?.notes || t?.note || "—"}</Text>
+            <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Notes</Text>
+            <Text className={classFor('text-gray-800','text-white')}>{t?.notes || t?.note || "—"}</Text>
           </View>
         </View>
 

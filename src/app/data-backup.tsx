@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import DateInput from '@/components/date-input';
@@ -184,19 +185,21 @@ export default function DataBackupScreen() {
         }
     };
 
+    const { classFor } = useResolvedTheme();
+
     return (
-        <SafeAreaView className="flex-1 bg-white px-4 py-6">
+        <SafeAreaView className={`${classFor('flex-1 bg-white px-4 py-6','flex-1 bg-neutral-900 px-4 py-6')}`}>
             {/* Header */}
             <View className="flex-row items-center my-4">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back" size={24} color="gray" />
                 </TouchableOpacity>
-                <Text className="flex-1 text-center text-2xl font-bold text-gray-800">Data & Backup</Text>
+                <Text className={classFor('flex-1 text-center text-2xl font-bold text-gray-800','flex-1 text-center text-2xl font-bold text-white')}>Data & Backup</Text>
             </View>
 
             <View className="space-y-4">
                 {/* Month selector / custom range */}
-                <View className="bg-white rounded-2xl p-4 my-4 shadow-lg">
+                <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 my-4 shadow-lg`}>
                     <View className="flex-row items-center justify-between mb-3">
                         <Text className="text-lg font-semibold">Report range</Text>
                         <TouchableOpacity onPress={() => setUseCustomRange((s) => !s)} className="px-3 py-1 rounded-full bg-gray-100">
@@ -223,17 +226,17 @@ export default function DataBackupScreen() {
                 {/* <View className="bg-white rounded-2xl p-4 my-4 shadow-lg flex-row items-center justify-between">
                     <View>
                         <Text className="text-lg font-semibold">Export to CSV</Text>
-                        <Text className="text-sm text-gray-500 mt-1">Download your data as .csv</Text>
+                            <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-gray-300 mt-1')}>Download your data as .csv</Text>
                     </View>
                     <TouchableOpacity onPress={exportCsv} disabled={loadingCsv} className="bg-gray-100 p-3 rounded-full">
                         {loadingCsv ? <ActivityIndicator /> : <Text>⬇️</Text>}
                     </TouchableOpacity>
                 </View> */}
 
-                <View className="bg-white rounded-2xl p-4 my-4 shadow-lg flex-row items-center justify-between">
+                <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 my-4 shadow-lg flex-row items-center justify-between`}>
                     <View>
                         <Text className="text-lg font-semibold">Export Report (PDF)</Text>
-                        <Text className="text-sm text-gray-500 mt-1">Generate PDF for the selected range</Text>
+                        <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-gray-300 mt-1')}>Generate PDF for the selected range</Text>
                     </View>
                     <TouchableOpacity onPress={exportMonthlyPdf} disabled={loadingPdf} className="bg-gray-100 p-3 rounded-full">
                         {loadingPdf ? <ActivityIndicator /> : <Text>⬇️</Text>}

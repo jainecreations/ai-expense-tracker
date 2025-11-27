@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, useColorScheme } from "react-native";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 
 export default function NotFoundScreen() {
   const router = useRouter();
@@ -10,9 +11,12 @@ export default function NotFoundScreen() {
     router.replace("/(tabs)");
   }, []);
 
+  const { classFor } = useResolvedTheme();
+  const { isDark } = useResolvedTheme();
+
   return (
-    <View className="flex-1 items-center justify-center bg-white">
-      <ActivityIndicator size="large" color="#007AFF" />
+    <View className={`${classFor('flex-1 items-center justify-center bg-white','flex-1 items-center justify-center bg-neutral-900')}`}>
+      <ActivityIndicator size="large" color={isDark ? '#fff' : '#007AFF'} />
     </View>
   );
 }

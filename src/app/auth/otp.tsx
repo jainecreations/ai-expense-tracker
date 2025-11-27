@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 
 export default function OtpScreen() {
   const { phone } = useLocalSearchParams();
@@ -19,16 +20,18 @@ export default function OtpScreen() {
     else router.replace("/"); // redirect to home
   };
 
-  return (
-    <View className="flex-1 bg-white px-6 py-16 justify-center">
-      <Text className="text-3xl font-bold mb-6 text-center text-gray-800">Enter OTP</Text>
+  const { classFor } = useResolvedTheme();
 
-      <Text className="text-gray-500 text-center mb-4">
+  return (
+    <View className={`${classFor('flex-1 bg-white px-6 py-16 justify-center','flex-1 bg-neutral-900 px-6 py-16 justify-center')}`}>
+      <Text className={classFor('text-3xl font-bold mb-6 text-center text-gray-800','text-3xl font-bold mb-6 text-center text-white')}>Enter OTP</Text>
+
+      <Text className={classFor('text-gray-500 text-center mb-4','text-gray-300 text-center mb-4')}>
         Sent to +91 {phone}
       </Text>
 
       <TextInput
-        className="border border-gray-300 rounded-xl text-center text-2xl py-3 mb-6"
+        className={classFor('border border-gray-300 rounded-xl text-center text-2xl py-3 mb-6','border border-gray-700 rounded-xl text-center text-2xl py-3 mb-6 bg-neutral-800 text-white')}
         keyboardType="number-pad"
         placeholder="••••••"
         value={otp}

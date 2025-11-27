@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "expo-router";
@@ -14,20 +15,22 @@ export default function ProfileScreen() {
     router.replace("/auth/signin");
   };
 
+  const { classFor } = useResolvedTheme();
+
   return (
-    <ScrollView className="flex-1 px-5 py-8 bg-[#f5f8fd]">
+    <ScrollView className={`${classFor('flex-1 px-5 py-8 bg-[#f5f8fd]','flex-1 px-5 py-8 bg-neutral-900')}`}>
       {/* Header */}
       <View className="flex-row items-center my-4">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="gray" />
         </TouchableOpacity>
-        <Text className="flex-1 text-center text-2xl font-bold text-gray-800">
+        <Text className={classFor('flex-1 text-center text-2xl font-bold text-gray-800','flex-1 text-center text-2xl font-bold text-white')}>
           Profile
         </Text>
       </View>
 
       {/* Profile Info */}
-      <View className="bg-white mx-5 mt-6 rounded-2xl items-center p-6 shadow">
+  <View className={`${classFor('bg-white','bg-neutral-800')} mx-5 mt-6 rounded-2xl items-center p-6 shadow`}>
         <Image
           source={{
             uri:
@@ -37,14 +40,14 @@ export default function ProfileScreen() {
           }}
           className="w-24 h-24 rounded-full mb-4"
         />
-        <Text className="text-xl font-semibold text-gray-800 mb-1">
+        <Text className={classFor('text-xl font-semibold text-gray-800 mb-1','text-xl font-semibold text-white mb-1')}>
           {user?.user_metadata?.full_name || "User Name"}
         </Text>
-        <Text className="text-gray-500 mb-3">{user?.email}</Text>
+        <Text className={classFor('text-gray-500 mb-3', 'text-gray-300 mb-3')}>{user?.email}</Text>
       </View>
 
       {/* More Options */}
-      <View className="mt-6 mx-5 bg-white rounded-2xl shadow overflow-hidden">
+  <View className={`${classFor('mt-6 mx-5 bg-white','mt-6 mx-5 bg-neutral-800')} rounded-2xl shadow overflow-hidden`}>
         {/* <TouchableOpacity
           className="flex-row items-center px-6 py-4 border-b border-gray-100"
           onPress={() => router.push("/settings")}

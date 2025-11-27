@@ -11,6 +11,7 @@ import { PieChart, LineChart, BarChart } from "react-native-chart-kit";
 import { useTransactionStore } from "@/store/transactionStore";
 import { getCategoryColor } from "@/utils/helper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 
 const screenWidth = Dimensions.get("window").width - 32;
 
@@ -100,19 +101,21 @@ export default function Insights() {
     setCurrentMonth(d);
   };
 
+  const { classFor } = useResolvedTheme();
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="flex-1 bg-white px-4 py-6">
+    <SafeAreaView className={`flex-1 ${classFor('bg-white','bg-neutral-900')}`}>
+      <ScrollView className={`${classFor('flex-1 bg-white','flex-1 bg-neutral-900')} px-4 py-6`}>
         {/* Header */}
-        <Text className="text-3xl font-bold text-gray-800 mb-4">Insights</Text>
+        <Text className={classFor('text-3xl font-bold text-gray-800 mb-4','text-3xl font-bold text-white mb-4')}>Insights</Text>
 
         {/* Month selector pill */}
         <View className="flex-row items-center justify-center mb-6">
-          <View className="flex-row items-center bg-white rounded-full px-3 py-2 shadow">
+          <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-full px-3 py-2 shadow`}>
             <TouchableOpacity onPress={prevMonth} className="px-2">
               <Text className="text-lg">◀</Text>
             </TouchableOpacity>
-            <Text className="px-4 text-gray-700 font-medium">{formatMonthLabel(currentMonth)}</Text>
+            <Text className={classFor('px-4 text-gray-700 font-medium','px-4 text-gray-200 font-medium')}>{formatMonthLabel(currentMonth)}</Text>
             <TouchableOpacity onPress={nextMonth} className="px-2">
               <Text className="text-lg">▶</Text>
             </TouchableOpacity>
@@ -122,8 +125,8 @@ export default function Insights() {
         {/* Grid of cards */}
         <View className="space-y-4">
           {/* Card 1: Total Expenses */}
-          <View className="bg-white rounded-2xl p-4 shadow-lg items-center">
-            <Text className="text-sm text-gray-400">Total Expenses This Month</Text>
+          <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg items-center`}>
+            <Text className={classFor('text-sm text-gray-400','text-sm text-gray-300')}>Total Expenses This Month</Text>
             <Text className="text-4xl font-bold text-red-500 mt-2">₹{totalAmount.toFixed(2)}</Text>
 
             {/* Sparkline */}
@@ -153,12 +156,12 @@ export default function Insights() {
             {/* Dynamic comparison vs previous month */}
             {prevMonthTotal === 0 ? (
               totalAmount === 0 ? (
-                <Text className="mt-2 text-sm text-gray-500">No expenses compared to {prevMonthLabel}</Text>
+                <Text className={classFor('mt-2 text-sm text-gray-500', 'mt-2 text-sm text-gray-300')}>No expenses compared to {prevMonthLabel}</Text>
               ) : (
                 <Text className="mt-2 text-sm text-yellow-600"></Text>
               )
             ) : percentChange === 0 ? (
-              <Text className="mt-2 text-sm text-gray-500">No change compared to {prevMonthLabel}</Text>
+              <Text className={classFor('mt-2 text-sm text-gray-500','mt-2 text-sm text-gray-300')}>No change compared to {prevMonthLabel}</Text>
             ) : percentChange! > 0 ? (
               <Text className="mt-2 text-sm text-red-600">↑ {Math.abs(percentChange!).toFixed(0)}% compared to {prevMonthLabel}</Text>
             ) : (
@@ -167,8 +170,8 @@ export default function Insights() {
           </View>
 
           {/* Card 2: Donut + Legend */}
-          <View className="bg-white rounded-2xl p-4 shadow-lg mt-4">
-            <Text className="text-lg font-semibold mb-3 text-gray-700">Category Breakdown</Text>
+          <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg mt-4`}>
+            <Text className={classFor('text-lg font-semibold mb-3 text-gray-700','text-lg font-semibold mb-3 text-white')}>Category Breakdown</Text>
             {pieData.length > 0 ? (
               <View className="flex-row">
                 {/* <View style={{ position: "relative", flex: 1, alignItems: "center" }}> */}
@@ -204,21 +207,21 @@ export default function Insights() {
                 {/* </View> */}
               </View>
             ) : (
-              <Text className="text-gray-400 text-center py-8">No data</Text>
+              <Text className={classFor('text-gray-400 text-center py-8','text-gray-300 text-center py-8')}>No data</Text>
             )}
           </View>
 
           {/* Card 3: Top Categories */}
-          <View className="bg-white rounded-2xl p-4 shadow-lg mt-4">
-            <Text className="text-lg font-semibold mb-3 text-gray-700">Top Categories This Month</Text>
+          <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg mt-4`}>
+            <Text className={classFor('text-lg font-semibold mb-3 text-gray-700','text-lg font-semibold mb-3 text-white')}>Top Categories This Month</Text>
             <View className="space-y-3">
               {categoryData.slice(0, 5).map((c, i) => {
                 const pct = categoryData.length ? (c.amount / categoryData[0].amount) : 0;
                 return (
                   <View key={c.name} className="flex-row items-center">
                     <View className="w-14">
-                      <Text className="text-sm text-gray-700">{c.name}</Text>
-                      <Text className="text-xs text-gray-400">₹{c.amount.toFixed(0)}</Text>
+                      <Text className={classFor('text-sm text-gray-700','text-sm text-white')}>{c.name}</Text>
+                      <Text className={classFor('text-xs text-gray-400','text-xs text-gray-300')}>₹{c.amount.toFixed(0)}</Text>
                     </View>
                     <View className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden mr-2">
                       <View style={{ width: `${Math.max(8, pct * 100)}%`, height: 32, backgroundColor: getCategoryColor(c.name) }} />
@@ -230,8 +233,8 @@ export default function Insights() {
           </View>
 
           {/* Card 4: Weekly Spend */}
-          <View className="bg-white rounded-2xl p-4 shadow-lg my-4">
-            <Text className="text-lg font-semibold mb-3 text-gray-700">Weekly Spend</Text>
+          <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg my-4`}>
+            <Text className={classFor('text-lg font-semibold mb-3 text-gray-700','text-lg font-semibold mb-3 text-white')}>Weekly Spend</Text>
             <BarChart
               data={{ labels: ["W1", "W2", "W3", "W4"], datasets: [{ data: weekly }] }}
               width={screenWidth}

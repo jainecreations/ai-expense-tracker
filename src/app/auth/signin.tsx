@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { Ionicons } from "@expo/vector-icons";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 import GoogleSignInButton from "./google-login";
 
 export default function SignInScreen() {
@@ -38,16 +39,18 @@ export default function SignInScreen() {
 
   const goToSignup = () => router.push("/auth/signup");
 
+  const { classFor } = useResolvedTheme();
+
   return (
-    <View className="flex-1 bg-white px-6 py-16 justify-center">
+    <View className={`${classFor('flex-1 bg-white px-6 py-16 justify-center','flex-1 bg-neutral-900 px-6 py-16 justify-center')}`}>
       {/* Header */}
-      <Text className="text-3xl font-bold mb-8 text-center text-gray-800">
+      <Text className={classFor('text-3xl font-bold mb-8 text-center text-gray-800','text-3xl font-bold mb-8 text-center text-white')}>
         Welcome Back 👋
       </Text>
 
       {/* Email */}
-      <Text className="text-gray-600 mb-2">Email</Text>
-      <View className="flex-row items-center border border-gray-300 rounded-xl px-4 mb-4">
+  <Text className={classFor('text-gray-600 mb-2','text-gray-300 mb-2')}>Email</Text>
+  <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-4','flex-row items-center border border-gray-700 rounded-xl px-4 mb-4')}`}>
         <Ionicons name="mail-outline" size={20} color="gray" />
         <TextInput
           className="flex-1 py-3 px-2 text-lg"
@@ -61,11 +64,11 @@ export default function SignInScreen() {
       </View>
 
       {/* Password */}
-      <Text className="text-gray-600 mb-2">Password</Text>
-      <View className="flex-row items-center border border-gray-300 rounded-xl px-4 mb-6">
+  <Text className={classFor('text-gray-600 mb-2','text-gray-300 mb-2')}>Password</Text>
+  <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-6','flex-row items-center border border-gray-700 rounded-xl px-4 mb-6')}`}>
         <Ionicons name="lock-closed-outline" size={20} color="gray" />
         <TextInput
-          className="flex-1 py-3 px-2 text-lg text-gray-800"
+          className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
           placeholder="Enter your password"
           placeholderTextColor="#9CA3AF"
           secureTextEntry
@@ -86,14 +89,14 @@ export default function SignInScreen() {
       </TouchableOpacity>
 
       {/* Divider */}
-      <Text className="text-center text-gray-500 my-6">or</Text>
+  <Text className={classFor('text-center text-gray-500 my-6','text-center text-gray-300 my-6')}>or</Text>
 
       {/* Google Sign-In */}
       <GoogleSignInButton />
 
       {/* Sign Up */}
       <TouchableOpacity onPress={goToSignup} className="mt-8">
-        <Text className="text-center text-gray-600">
+        <Text className={classFor('text-center text-gray-600','text-center text-gray-300')}>
           Don’t have an account?{" "}
           <Text className="text-blue-600 font-semibold">Sign up</Text>
         </Text>

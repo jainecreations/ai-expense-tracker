@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Pressable, Alert, ActivityIndicator } from "react-native";
+import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 type IoniconName = ComponentProps<typeof Ionicons>["name"];
@@ -76,18 +77,20 @@ export default function AddExpenseScreen() {
     const cat = categories.find((c) => c.name === (tx.category || tx.name));
     if (cat) setSelectedCategory(cat);
   }, [id, transactions]);
+  const { classFor } = useResolvedTheme();
+
   return (
-    <ScrollView className="flex-1 px-5 py-8 bg-[#f5f8fd]">
+    <ScrollView className={`${classFor('flex-1 px-5 py-8 bg-[#f5f8fd]','flex-1 px-5 py-8 bg-neutral-900')}`}>
       <View>
         {/* Header */}
         <View className="flex-row items-center my-4">
           <Ionicons onPress={() => router.back()} name="arrow-back-outline" size={24} color="#000" />
-          <Text className="flex-1 text-center text-2xl font-bold">{isEditing ? "Edit Expense" : "Add Expense"}</Text>
+          <Text className={classFor('flex-1 text-center text-2xl font-bold','flex-1 text-center text-2xl font-bold text-white')}>{isEditing ? "Edit Expense" : "Add Expense"}</Text>
         </View>
 
         {/* Amount */}
-        <Text className="mt-5 mb-2 text-gray-500 font-medium">Amount</Text>
-        <View className="flex-row items-center bg-white rounded-lg px-4 border-gray-300 border">
+  <Text className={classFor('mt-5 mb-2 text-gray-500 font-medium','mt-5 mb-2 text-gray-300 font-medium')}>Amount</Text>
+  <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-lg px-4 border-gray-300 border`}>
           <Text className="text-xl mr-2">₹</Text>
           <TextInput
             className="text-xl flex-1 py-2"
@@ -99,8 +102,8 @@ export default function AddExpenseScreen() {
         </View>
 
         {/* Expense Title */}
-        <Text className="mt-5 mb-2 text-gray-500 font-medium">Title (Optional)</Text>
-        <View className="flex-row items-center bg-white rounded-lg px-4 border-gray-300 border">
+  <Text className={classFor('mt-5 mb-2 text-gray-500 font-medium','mt-5 mb-2 text-gray-300 font-medium')}>Title (Optional)</Text>
+  <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-lg px-4 border-gray-300 border`}>
           <Ionicons name="document-text-outline" size={20} color="#777" />
           <TextInput
             className="text-xl flex-1 py-2 ml-2"
@@ -112,7 +115,7 @@ export default function AddExpenseScreen() {
 
 
         {/* Category */}
-        <Text className="mt-5 mb-2 text-gray-500 font-medium">Category</Text>
+  <Text className={classFor('mt-5 mb-2 text-gray-500 font-medium','mt-5 mb-2 text-gray-300 font-medium')}>Category</Text>
         <View className="flex-row flex-wrap mt-3">
           {categories.map((category, index) => (
             <Pressable
@@ -130,10 +133,10 @@ export default function AddExpenseScreen() {
         </View>
 
         {/* Date */}
-        <DateInput date={date} setDate={setDate} />
+  <DateInput date={date} setDate={setDate} />
 
         {/* Save Button */}
-        <TouchableOpacity
+          <TouchableOpacity
           onPress={handleSave}
           disabled={isSaving}
           className="mt-8 bg-[#277cf6] rounded-full py-4 shadow-lg"
