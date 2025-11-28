@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState , useEffect} from "react";
 import {
   View,
   Text,
@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import { PieChart, LineChart, BarChart } from "react-native-chart-kit";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useCategoryBudgetStore } from '@/store/categoryBudgetStore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AlertBanner from '@/components/alert-banner';
 import { useBudgetStore } from '@/store/budgetStore';
 import { getCategoryColor } from "@/utils/helper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -103,10 +106,54 @@ export default function Insights() {
   };
 
   const { classFor } = useResolvedTheme();
+  const { budgets, loadCategoryBudgets } = useCategoryBudgetStore();
+  const [showBanner, setShowBanner] = React.useState(false);
+  const [bannerTitle, setBannerTitle] = React.useState('');
+
+  useEffect(() => {
+    // load category budgets for the month
+    const monthKey = currentMonth.toISOString().slice(0,7);
+    loadCategoryBudgets(monthKey).catch(() => {});
+  }, [currentMonth]);
+
+  // Check settings and compute banner visibility
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const overspend = (await AsyncStorage.getItem('settings:overspendingAlerts')) === '1';
+        const b80 = (await AsyncStorage.getItem('settings:budgetAlert80')) === '1';
+        if (!overspend) {
+          if (mounted) setShowBanner(false);
+          return;
+        }
+
+        // find any category crossing 80%
+        for (const c of categoryData) {
+          const budget = budgets[c.name];
+          if (budget && budget > 0) {
+            const spent = c.amount;
+            const pct = spent / budget;
+            if (pct >= 0.8) {
+              if (mounted) {
+                setBannerTitle(`⚠️ You crossed 80% of your ${c.name} budget.`);
+                setShowBanner(true);
+              }
+              return;
+            }
+          }
+        }
+        if (mounted) setShowBanner(false);
+      } catch (err) {
+        console.warn('Failed to evaluate budget alerts', err);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [categoryData, budgets]);
   const { amount: monthlyBudget, loadBudget } = useBudgetStore();
 
   // load budget for current month
-  React.useEffect(() => {
+  useEffect(() => {
     const key = currentMonth.toISOString().slice(0,7);
     loadBudget(key).catch(() => {});
   }, [currentMonth]);
@@ -116,6 +163,13 @@ export default function Insights() {
       <ScrollView className={`${classFor('flex-1 bg-white','flex-1 bg-neutral-900')} px-4 py-6`}>
         {/* Header */}
         <Text className={classFor('text-3xl font-bold text-gray-800 mb-4','text-3xl font-bold text-white mb-4')}>Insights</Text>
+
+        {/* Alert banner (if any) */}
+        {showBanner && (
+          <View className="mb-4">
+            <AlertBanner title={bannerTitle} message="Try reducing orders this week." onDismiss={() => setShowBanner(false)} />
+          </View>
+        )}
 
         {/* Month selector pill */}
         <View className="flex-row items-center justify-center mb-6">
