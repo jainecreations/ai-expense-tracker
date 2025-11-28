@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { PieChart, LineChart, BarChart } from "react-native-chart-kit";
 import { useTransactionStore } from "@/store/transactionStore";
+import { useBudgetStore } from '@/store/budgetStore';
 import { getCategoryColor } from "@/utils/helper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useResolvedTheme from '@/hooks/useResolvedTheme';
@@ -102,6 +103,13 @@ export default function Insights() {
   };
 
   const { classFor } = useResolvedTheme();
+  const { amount: monthlyBudget, loadBudget } = useBudgetStore();
+
+  // load budget for current month
+  React.useEffect(() => {
+    const key = currentMonth.toISOString().slice(0,7);
+    loadBudget(key).catch(() => {});
+  }, [currentMonth]);
 
   return (
     <SafeAreaView className={`flex-1 ${classFor('bg-white','bg-neutral-900')}`}>
@@ -167,6 +175,31 @@ export default function Insights() {
             ) : (
               <Text className="mt-2 text-sm text-green-600">↓ {Math.abs(percentChange!).toFixed(0)}% compared to {prevMonthLabel}</Text>
             )}
+          </View>
+
+          {/* Monthly Summary Card */}
+          <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg mt-4`}> 
+            <Text className={classFor('text-lg font-semibold mb-2 text-gray-700','text-lg font-semibold mb-2 text-white')}>Monthly Summary</Text>
+            <Text className={classFor('text-base text-gray-700','text-base text-white')}>This month, you spent <Text className="font-semibold">₹{Math.round(totalAmount)}</Text>.</Text>
+            {categoryData.length > 0 ? (
+              (() => {
+                const top = categoryData[0];
+                const pct = totalAmount > 0 ? Math.round((top.amount / totalAmount) * 100) : 0;
+                return (
+                  <Text className={classFor('mt-2 text-sm text-gray-600','mt-2 text-sm text-neutral-300')}>{top.name} was your biggest category ({pct}%).</Text>
+                );
+              })()
+            ) : (
+              <Text className={classFor('mt-2 text-sm text-gray-600','mt-2 text-sm text-neutral-300')}>No category data yet.</Text>
+            )}
+
+            <Text className={classFor('mt-3 text-sm text-gray-600','mt-3 text-sm text-neutral-300')}>
+              {monthlyBudget == null
+                ? 'No monthly budget set.'
+                : totalAmount <= monthlyBudget
+                ? 'You stayed within your monthly budget.'
+                : `You exceeded your monthly budget by ₹${Math.round(totalAmount - (monthlyBudget || 0))}.`}
+            </Text>
           </View>
 
           {/* Card 2: Donut + Legend */}
