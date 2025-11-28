@@ -10,16 +10,28 @@ const TabLayout = () => {
             <Tabs
                 screenOptions={{ headerShown: false }}
             >
-                <Tabs.Screen name="index" options={{ tabBarLabel: "Home",
-                        tabBarIcon: ({ color, size }) => (
-                            <Ionicons name="home" size={size} color={color} />
-                        ), }} />
+                <Tabs.Screen name="index" options={{
+                    tabBarLabel: "Home",
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home" size={size} color={color} />
+                    )
+                }} />
+                <Tabs.Screen name="monthly-budget" options={{
+                    tabBarLabel: "Budget",
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cash-outline" size={size} color={color} />
+                    ),
+                }} />
+                <Tabs.Screen
+                    name="dummy-screen"
+                    options={{ tabBarLabel: "" }} // hide label if needed
+                />
                 <Tabs.Screen
                     name="insights"
                     options={{
                         tabBarLabel: "Insights",
                         tabBarIcon: ({ color, size }) => (
-                            <Ionicons name="person-circle-outline" size={size} color={color} />
+                            <Ionicons name="stats-chart" size={size} color={color} />
                         ),
                     }}
                 // listeners={{
@@ -28,6 +40,12 @@ const TabLayout = () => {
                 //   },
                 // }}
                 />
+                <Tabs.Screen name="profile" options={{
+                    tabBarLabel: "Profile",
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person-circle" size={size} color={color} />
+                    ),
+                }} />
             </Tabs>
 
             <Pressable
