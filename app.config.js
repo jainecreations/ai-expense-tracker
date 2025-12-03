@@ -10,7 +10,7 @@ export default {
   expo: {
     name: "ai-expense-manager",
     slug: "ai-expense-manager",
-    plugins: ["expo-web-browser"],
+  plugins: ["expo-web-browser", "expo-dev-client"],
     android: {
       package: "com.anonymous.aiexpensemanager",
     },
@@ -19,7 +19,7 @@ export default {
     },
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./src/assets/home.png",
     runtimeVersion: "1.0.0",
     updates: {
       enabled: false

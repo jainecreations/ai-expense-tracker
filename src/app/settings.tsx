@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Switch, Alert, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Switch, Alert, ScrollView, Platform, PermissionsAndroid } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useThemeStore } from "@/store/themeStore";
@@ -14,6 +14,7 @@ type Appearance = "system" | "light" | "dark";
 const APPEARANCE_KEY = "settings:appearance";
 const WEEKLY_KEY = "settings:weeklySummary";
 const OVERSPEND_KEY = "settings:overspendingAlerts";
+const SMART_SMS_KEY = 'settings:smartSmsCapture';
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -23,6 +24,7 @@ export default function SettingsScreen() {
     const [appearance, setAppearance] = useState<Appearance>("system");
     const [weeklySummary, setWeeklySummary] = useState(false);
     const [overspendAlerts, setOverspendAlerts] = useState(false);
+    const [smartSmsEnabled, setSmartSmsEnabled] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -33,6 +35,8 @@ export default function SettingsScreen() {
                 if (w != null) setWeeklySummary(w === "1");
                 const o = await AsyncStorage.getItem(OVERSPEND_KEY);
                 if (o != null) setOverspendAlerts(o === "1");
+                const s = await AsyncStorage.getItem(SMART_SMS_KEY);
+                if (s != null) setSmartSmsEnabled(s === '1');
             } catch (err) {
                 console.warn("Failed to load settings", err);
             }
@@ -66,6 +70,67 @@ export default function SettingsScreen() {
             await AsyncStorage.setItem(OVERSPEND_KEY, v ? "1" : "0");
         } catch (err) {
             console.warn("Failed to save overspend setting", err);
+        }
+    };
+
+    const toggleSmartSms = async (v: boolean) => {
+        if (Platform.OS !== 'android') {
+            Alert.alert('Smart SMS Capture', 'This feature is available on Android only.');
+            return;
+        }
+
+        if (v) {
+            // show permission UX
+            Alert.alert(
+                'Smart SMS Capture',
+                'Read transaction SMS to auto-add expenses. We only scan OTP/transaction messages, not personal chats.',
+                [
+                    {
+                        text: 'Not Now',
+                        style: 'cancel',
+                        onPress: async () => {
+                            setSmartSmsEnabled(false);
+                            await AsyncStorage.setItem(SMART_SMS_KEY, '0');
+                        },
+                    },
+                    {
+                        text: 'Allow SMS Access',
+                        onPress: async () => {
+                            try {
+                                const receive = PermissionsAndroid.PERMISSIONS.RECEIVE_SMS;
+                                const read = PermissionsAndroid.PERMISSIONS.READ_SMS;
+                                const grantedReceive = await PermissionsAndroid.request(receive, {
+                                    title: 'Receive SMS Permission',
+                                    message: 'This app needs permission to receive SMS to detect incoming transaction messages.',
+                                    buttonPositive: 'OK',
+                                });
+                                const grantedRead = await PermissionsAndroid.request(read, {
+                                    title: 'Read SMS Permission',
+                                    message: 'This app needs permission to read SMS to detect incoming transaction messages.',
+                                    buttonPositive: 'OK',
+                                });
+
+                                const ok = grantedReceive === PermissionsAndroid.RESULTS.GRANTED;
+                                if (ok) {
+                                    setSmartSmsEnabled(true);
+                                    await AsyncStorage.setItem(SMART_SMS_KEY, '1');
+                                } else {
+                                    Alert.alert('Permission denied', 'Receive SMS permission denied; Smart Capture will remain disabled.');
+                                    setSmartSmsEnabled(false);
+                                    await AsyncStorage.setItem(SMART_SMS_KEY, '0');
+                                }
+                            } catch (e) {
+                                console.warn('Failed to request SMS permissions', e);
+                                setSmartSmsEnabled(false);
+                                await AsyncStorage.setItem(SMART_SMS_KEY, '0');
+                            }
+                        },
+                    },
+                ]
+            );
+        } else {
+            setSmartSmsEnabled(false);
+            await AsyncStorage.setItem(SMART_SMS_KEY, '0');
         }
     };
 
@@ -144,6 +209,14 @@ export default function SettingsScreen() {
                             <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Notify when spending exceeds budget</Text>
                         </View>
                         <Switch value={overspendAlerts} onValueChange={toggleOverspend} />
+                    </View>
+
+                    <View className="flex-row items-center justify-between py-3">
+                        <View style={{ flex: 1 }}>
+                            <Text className={classFor('text-base','text-base text-white')}>Smart SMS Capture</Text>
+                            <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Read transaction SMS to auto-add expenses. (Android only)</Text>
+                        </View>
+                        <Switch value={smartSmsEnabled} onValueChange={toggleSmartSms} />
                     </View>
                 </View>
 
