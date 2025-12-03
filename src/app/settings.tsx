@@ -238,9 +238,9 @@ export default function SettingsScreen() {
                         <Text className={classFor('text-base','text-base text-white')}>Version</Text>
                         <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>{(require("../../package.json").version) || "—"}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => Alert.alert("Privacy", "Privacy policy placeholder — add your URL here.")} className="py-3">
+                    {/* <TouchableOpacity onPress={() => Alert.alert("Privacy", "Privacy policy placeholder — add your URL here.")} className="py-3">
                         <Text className={classFor('text-base','text-base')}>Privacy</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 {/* Logout */}

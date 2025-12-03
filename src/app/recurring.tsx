@@ -5,8 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { useRecurringStore } from '@/store/recurringStore';
 import { format, parseISO } from 'date-fns';
+import { useRouter } from 'expo-router';
 
 export default function RecurringScreen() {
+  const router = useRouter();
   const { classFor } = useResolvedTheme();
   const { recurring, loadRecurring, addRecurring, deleteRecurring, generateNow, isLoading } = useRecurringStore();
   const [modalOpen, setModalOpen] = useState(false);
@@ -56,6 +58,7 @@ export default function RecurringScreen() {
     <SafeAreaView className={classFor('flex-1 bg-[#f7fafc]','flex-1 bg-neutral-900')}>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View className="flex-row items-center justify-between mb-4">
+          <Ionicons onPress={() => router.back()} name="arrow-back-outline" size={24} color="#000" />
           <Text className={classFor('text-2xl font-bold text-gray-800','text-2xl font-bold text-white')}>Recurring Expenses</Text>
           <TouchableOpacity onPress={openAdd} className="bg-blue-600 px-3 py-2 rounded-full">
             <Text className="text-white">Add</Text>

@@ -78,7 +78,7 @@ export default function HomeScreen() {
       {/* Bottom Menu */}
       {menuVisible && <HomeMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />}
       {/* Dev-only helper: inject a test pending SMS so Smart Captures card appears */}
-      {__DEV__ && (
+      {/* {__DEV__ && (
         <Pressable
           onPress={async () => {
             try {
@@ -110,7 +110,7 @@ export default function HomeScreen() {
         >
           <Text className="text-white font-semibold">+SMS</Text>
         </Pressable>
-      )}
+      )} */}
     </SafeAreaView>
   );
 }
