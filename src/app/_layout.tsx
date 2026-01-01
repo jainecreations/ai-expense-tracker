@@ -1,6 +1,7 @@
 import "../global.css";
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { NativeModules } from "react-native";
 import { supabase } from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
 import { View, ActivityIndicator, Platform, useColorScheme } from "react-native";
@@ -34,6 +35,54 @@ export default function Layout() {
   useEffect(() => {
     (async () => {
       await useThemeStore.getState().loadAppearance();
+      // Poll for native module availability (some RN builds initialize native
+      // modules slightly after JS startup). Try up to 10 times, 300ms apart.
+      const RN = require('react-native');
+      const { NativeModules } = RN;
+      // eslint-disable-next-line no-console
+      console.log('NativeModules keys (initial):', Object.keys(NativeModules || {}));
+      const candidates = ['SmsEventModule', 'SmsEventEmitter', 'SmsRetriever', 'SmsRetrieverModule'];
+
+      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+      let found = false;
+      for (let attempt = 0; attempt < 10 && !found; attempt++) {
+        // Refresh reference
+        const keys = Object.keys(NativeModules || {});
+        // eslint-disable-next-line no-console
+        console.log(`native discovery attempt=${attempt} keys=`, keys);
+        for (const name of candidates) {
+          try {
+            const mod = NativeModules[name];
+            if (!mod) continue;
+            // eslint-disable-next-line no-console
+            console.log(`Found native module ${name} on attempt=${attempt}`);
+            if (typeof mod.rawPending === 'function') {
+              try {
+                const raw = await mod.rawPending();
+                // eslint-disable-next-line no-console
+                console.log(`raw pending from ${name}:`, raw);
+              } catch (e) {
+                console.warn(`rawPending call failed on ${name}`, e);
+              }
+            }
+            if (typeof mod.readPending === 'function') {
+              try {
+                const res = await mod.readPending();
+                // eslint-disable-next-line no-console
+                console.log(`readPending from ${name}:`, res);
+              } catch (e) {
+                console.warn(`readPending call failed on ${name}`, e);
+              }
+            }
+            found = true;
+            break;
+          } catch (e) {
+            console.warn('candidate native call failed', name, e);
+          }
+        }
+        if (!found) await sleep(300);
+      }
+      if (!found) console.warn('Native SmsEvent module not found after retries');
     })();
   }, []);
 

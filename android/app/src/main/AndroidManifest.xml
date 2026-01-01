@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.READ_SMS"/>
   <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+  <uses-permission android:name="android.permission.READ_SMS"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -27,9 +27,21 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="ai-expense-manager" android:host="auth"/>
         <data android:scheme="exp+ai-expense-manager"/>
       </intent-filter>
     </activity>
+
+    <!-- Single receiver that handles both system SMS broadcasts and Google SMS Retriever deliveries. -->
+    <receiver android:name="com.smsretriever.SmsReceiver" android:exported="true">
+      <!-- System SMS broadcast: receives classic SMS when app may be closed -->
+      <intent-filter android:priority="1000">
+        <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+      </intent-filter>
+      <!-- Google SMS Retriever API delivery (app hash messages) -->
+      <intent-filter>
+        <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
+      </intent-filter>
+    </receiver>
+
   </application>
 </manifest>

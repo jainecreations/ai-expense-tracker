@@ -8,6 +8,7 @@ import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { useAuthStore } from "@/store/authStore";
 import { useTransactionStore } from "@/store/transactionStore";
 import { Ionicons } from "@expo/vector-icons";
+import smsService from '@/lib/smsService';
 
 type Appearance = "system" | "light" | "dark";
 
@@ -21,7 +22,7 @@ export default function SettingsScreen() {
     const signOut = useAuthStore((s) => s.signOut);
     const clearTransactions = () => useTransactionStore.setState({ transactions: [] });
 
-    const [appearance, setAppearance] = useState<Appearance>("system");
+    const [appearance, setAppearance] = useState<Appearance>("light");
     const [weeklySummary, setWeeklySummary] = useState(false);
     const [overspendAlerts, setOverspendAlerts] = useState(false);
     const [smartSmsEnabled, setSmartSmsEnabled] = useState(false);
@@ -247,6 +248,26 @@ export default function SettingsScreen() {
                 <View className="my-6">
                     <TouchableOpacity onPress={handleLogout} className="bg-red-600 rounded-full py-3">
                         <Text className="text-center text-white font-semibold">Logout</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Dev-only: simulate incoming SMS for testing */}
+                <View className="py-3">
+                    <TouchableOpacity
+                        onPress={async () => {
+                            try {
+                                const msg = { body: 'Rs. 1,234.56 debited from your A/C at AMAZON. Ref 1234', originatingAddress: 'TEST', timestamp: Date.now() };
+                                const res = await smsService.handleIncomingSms(msg as any);
+                                Alert.alert('Test SMS', 'Simulated SMS handled: ' + (res ? 'parsed' : 'ignored'));
+                                console.log('[Settings] simulated sms result', res);
+                            } catch (e) {
+                                console.warn('[Settings] simulate sms failed', e);
+                                Alert.alert('Test SMS', 'Simulation failed');
+                            }
+                        }}
+                        className="py-2"
+                    >
+                        <Text className="text-sm text-blue-600">Simulate incoming SMS (dev)</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

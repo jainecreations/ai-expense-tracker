@@ -15,7 +15,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Pressable } from 'react-native';
 import useSmsImportStore from '@/store/smsImportStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid, NativeModules } from 'react-native';
+import smsService from '@/lib/smsService';
+            import { Platform } from 'react-native';
+
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -77,40 +80,61 @@ export default function HomeScreen() {
       </View>
       {/* Bottom Menu */}
       {menuVisible && <HomeMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />}
-      {/* Dev-only helper: inject a test pending SMS so Smart Captures card appears */}
-      {/* {__DEV__ && (
-        <Pressable
-          onPress={async () => {
-            try {
-              // enable smart sms setting for dev
-              const SMART_SMS_KEY = 'settings:smartSmsCapture';
-              await AsyncStorage.setItem(SMART_SMS_KEY, '1');
-              // request SMS permissions
-              try {
-                const receive = PermissionsAndroid.PERMISSIONS.RECEIVE_SMS;
-                const read = PermissionsAndroid.PERMISSIONS.READ_SMS;
-                await PermissionsAndroid.request(receive);
-                await PermissionsAndroid.request(read);
-              } catch (permErr) {
-                console.warn('Permission request failed', permErr);
-              }
+      {/* Button: fetch and process pending SMS persisted natively (for manual testing) */}
+      <Pressable
+        onPress={async () => {
+          try {
+console.log("sssdsddsds", Platform.OS);
+console.log('=====NativeModules keys:', Object.keys(NativeModules));
+console.log('======UIManager:', NativeModules.UIManager);
+            // Try native module rawPending first (non-destructive) for debugging
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            // const { NativeModules } = require('react-native');
+            const SmsMod = NativeModules?.SmsEventModule || NativeModules?.SmsEventEmitter || NativeModules?.SmsRetrieverModule || NativeModules?.SmsRetriever || null;
 
-              await useSmsImportStore.getState().addPending({
-                raw_text: 'HDFC: Rs. 499.00 debited at Swiggy on 01 Dec 2025 10:35',
-                amount: 499,
-                title: 'Swiggy',
-                bank: 'HDFC',
-                date: new Date().toISOString(),
-              });
-            } catch (e) {
-              console.warn('Dev helper failed', e);
+            console.log('NativeModules keysss:', Object.keys(require('react-native').NativeModules));
+            let pending: any[] = [];
+            if (SmsMod) {
+              if (typeof SmsMod.rawPending === 'function') {
+                const raw = await SmsMod.rawPending();
+                // eslint-disable-next-line no-console
+                console.log('rawPending returned', raw?.length ?? raw);
+                try {
+                  pending = JSON.parse(raw || '[]');
+                } catch (e) {
+                  console.warn('rawPending JSON parse failed', e);
+                  pending = [];
+                }
+              } else if (typeof SmsMod.readPending === 'function') {
+                // readPending is destructive (clears pending) but may be the only API available
+                const arr = await SmsMod.readPending();
+                // eslint-disable-next-line no-console
+                console.log('readPending returned length', arr?.length ?? 0);
+                pending = arr || [];
+              }
+            } else {
+              console.warn('No native SMS module available');
             }
-          }}
-          className="absolute bottom-6 right-6 bg-blue-600 rounded-full px-4 py-3 shadow-lg"
-        >
-          <Text className="text-white font-semibold">+SMS</Text>
-        </Pressable>
-      )} */}
+
+            console.log('Fetched pending SMS count=', pending?.length ?? 0);
+            for (const m of (pending || [])) {
+              try {
+                const body = m?.body ?? m?.messageBody ?? m?.raw_text ?? '';
+                const originatingAddress = m?.originatingAddress ?? m?.originating ?? '';
+                const timestamp = m?.timestamp ?? Date.now();
+                await smsService.handleIncomingSms({ body, originatingAddress, timestamp });
+              } catch (e) {
+                console.warn('processing pending sms failed', e);
+              }
+            }
+          } catch (e) {
+            console.warn('fetch pending sms failed', e);
+          }
+        }}
+        className="absolute bottom-6 right-6 bg-blue-600 rounded-full px-4 py-3 shadow-lg"
+      >
+        <Text className="text-white font-semibold">+SMS</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
