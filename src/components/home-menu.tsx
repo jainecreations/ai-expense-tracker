@@ -43,11 +43,11 @@ export default function HomeMenu({ visible, onClose }: HomeMenuProps) {
         >
           {/* Menu Items */}
           {[
-            { label: "Profile", route: "/profile" },
+            // { label: "Profile", route: "/profile" },
             { label: "Settings", route: "/settings" },
-            { label: "Budget", route: "/monthly-budget" },
-            { label: "Category Budgets", route: "/category-budgets" },
-            { label: "Recurring Expenses", route: "/recurring" },
+            // { label: "Budget", route: "/monthly-budget" },
+            // { label: "Category Budgets", route: "/category-budgets" },
+            // { label: "Recurring Expenses", route: "/recurring" },
             { label: "Export PDF", route: "/data-backup" },
           ].map((item, index) => (
             <View key={item.label}>

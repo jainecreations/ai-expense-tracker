@@ -244,11 +244,11 @@ export default function SettingsScreen() {
                 </View>
 
                 {/* Logout */}
-                <View className="my-6">
+                {/* <View className="my-6">
                     <TouchableOpacity onPress={handleLogout} className="bg-red-600 rounded-full py-3">
                         <Text className="text-center text-white font-semibold">Logout</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </ScrollView>
         </SafeAreaView>
     );
