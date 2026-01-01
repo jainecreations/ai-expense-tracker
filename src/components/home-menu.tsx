@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, Modal, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
-import useResolvedTheme from '@/hooks/useResolvedTheme';
+import useResolvedTheme from "@/hooks/useResolvedTheme";
 
 interface HomeMenuProps {
   visible: boolean;
@@ -35,63 +35,61 @@ export default function HomeMenu({ visible, onClose }: HomeMenuProps) {
         className="flex-1 bg-black/30 justify-start items-end"
         onPressOut={onClose}
       >
-        <View className={`${classFor('bg-white','bg-neutral-800')} rounded-lg mt-16 mr-4 p-2 w-40 shadow-md`}>
+        <View
+          className={`${classFor(
+            "bg-white",
+            "bg-neutral-800"
+          )} rounded-xl mt-16 mr-4 w-44 shadow-lg overflow-hidden`}
+        >
+          {/* Menu Items */}
+          {[
+            { label: "Profile", route: "/profile" },
+            { label: "Settings", route: "/settings" },
+            { label: "Budget", route: "/monthly-budget" },
+            { label: "Category Budgets", route: "/category-budgets" },
+            { label: "Recurring Expenses", route: "/recurring" },
+            { label: "Export PDF", route: "/data-backup" },
+          ].map((item, index) => (
+            <View key={item.label}>
+              <TouchableOpacity
+                className="py-3 px-4 active:opacity-70"
+                onPress={() => {
+                  onClose();
+                  router.push(item.route);
+                }}
+              >
+                <Text
+                  className={classFor(
+                    "text-gray-800 text-base",
+                    "text-white text-base"
+                  )}
+                >
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Separator */}
+              {index !== 5 && (
+                <View
+                  className={classFor(
+                    "h-px bg-gray-200",
+                    "h-px bg-neutral-700"
+                  )}
+                />
+              )}
+            </View>
+          ))}
+
+          {/* Sign Out Section */}
+          <View
+            className={classFor("h-px bg-gray-300", "h-px bg-neutral-600")}
+          />
+
           <TouchableOpacity
-            className="py-3 px-4"
-            onPress={() => {
-              onClose();
-              router.push("/profile");
-            }}
+            className="py-3 px-4 bg-red-50 active:opacity-70"
+            onPress={handleSignOut}
           >
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="py-3 px-4"
-            onPress={() => {
-              onClose();
-              router.push('/settings');
-            }}
-          >
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Settings</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="py-3 px-4"
-            onPress={() => {
-              onClose();
-              router.push('/monthly-budget')
-            }}
-          >
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Budget</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="py-3 px-4"
-            onPress={() => {
-              onClose();
-              router.push('/category-budgets');
-            }}
-          >
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Category Budgets</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="py-3 px-4"
-            onPress={() => {
-              onClose();
-              router.push('/recurring');
-            }}
-          >
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Recurring Expenses</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="py-3 px-4"
-            onPress={() => {
-              onClose();
-              router.push('/data-backup')
-            }}
-          >
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Export PDF</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="py-3 px-4" onPress={handleSignOut}>
-            <Text className={classFor('text-gray-800 text-base','text-white text-base')}>Sign Out</Text>
+            <Text className="text-red-600 text-base font-medium">Sign Out</Text>
           </TouchableOpacity>
         </View>
       </Pressable>

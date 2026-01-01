@@ -209,13 +209,13 @@ export default function RecentTransactions() {
 
             <Text className={classFor('text-sm text-gray-600 mb-2','text-sm text-neutral-300 mb-2')}>Date range</Text>
             <View className="flex-row mb-3">
-              <TouchableOpacity onPress={() => setDatePreset("7d")} className={`px-3 py-2 mr-2 rounded-full ${datePreset === "7d" ? classFor('bg-gray-200','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
+              <TouchableOpacity onPress={() => setDatePreset("7d")} className={`px-3 py-2 mr-2 rounded-full ${datePreset === "7d" ? classFor('bg-gray-400','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
                 <Text className={classFor('text-gray-800','text-white')}>Last 7 days</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setDatePreset("30d")} className={`px-3 py-2 mr-2 rounded-full ${datePreset === "30d" ? classFor('bg-gray-200','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
+              <TouchableOpacity onPress={() => setDatePreset("30d")} className={`px-3 py-2 mr-2 rounded-full ${datePreset === "30d" ? classFor('bg-gray-400','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
                 <Text className={classFor('text-gray-800','text-white')}>Last 30 days</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setDatePreset("month")} className={`px-3 py-2 mr-2 rounded-full ${datePreset === "month" ? classFor('bg-gray-200','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
+              <TouchableOpacity onPress={() => setDatePreset("month")} className={`px-3 py-2 mr-2 rounded-full ${datePreset === "month" ? classFor('bg-gray-400','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
                 <Text className={classFor('text-gray-800','text-white')}>This month</Text>
               </TouchableOpacity>
             </View>
@@ -234,13 +234,13 @@ export default function RecentTransactions() {
 
             <Text className={classFor('text-sm text-gray-600 mb-2','text-sm text-neutral-300 mb-2')}>Sort</Text>
             <View className="flex-row mb-4">
-              <TouchableOpacity onPress={() => setSortMode("latest")} className={`px-3 py-2 mr-2 rounded-full ${sortMode === "latest" ? classFor('bg-gray-200','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
+              <TouchableOpacity onPress={() => setSortMode("latest")} className={`px-3 py-2 mr-2 rounded-full ${sortMode === "latest" ? classFor('bg-gray-400','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
                 <Text className={classFor('text-gray-800','text-white')}>Latest</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setSortMode("high")} className={`px-3 py-2 mr-2 rounded-full ${sortMode === "high" ? classFor('bg-gray-200','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
+              <TouchableOpacity onPress={() => setSortMode("high")} className={`px-3 py-2 mr-2 rounded-full ${sortMode === "high" ? classFor('bg-gray-400','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
                 <Text className={classFor('text-gray-800','text-white')}>High → Low</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setSortMode("low")} className={`px-3 py-2 mr-2 rounded-full ${sortMode === "low" ? classFor('bg-gray-200','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
+              <TouchableOpacity onPress={() => setSortMode("low")} className={`px-3 py-2 mr-2 rounded-full ${sortMode === "low" ? classFor('bg-gray-400','bg-neutral-700') : classFor('bg-gray-100','bg-neutral-800')}`}>
                 <Text className={classFor('text-gray-800','text-white')}>Low → High</Text>
               </TouchableOpacity>
             </View>
