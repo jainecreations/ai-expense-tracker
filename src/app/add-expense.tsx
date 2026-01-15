@@ -6,6 +6,7 @@ import type { ComponentProps } from "react";
 type IoniconName = ComponentProps<typeof Ionicons>["name"];
 import { useRouter, useLocalSearchParams } from "expo-router";
 import DateInput from "@/components/date-input";
+import { classify } from '@/lib/aiClassifier';
 import { useTransactionStore } from "@/store/transactionStore";
 import { useAuthStore } from "@/store/authStore";
 
@@ -41,6 +42,42 @@ export default function AddExpenseScreen() {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [date, setDate] = useState(new Date());
   const [title, setTitle] = useState("");
+  // const [suggestion, setSuggestion] = useState<{ category: string; confidence: number } | null>(null);
+  // const [aiApplied, setAiApplied] = useState<boolean>(false);
+
+  // debounce classifier on title/amount changes
+  // useEffect(() => {
+  //   let mounted = true;
+  //   const t = title || '';
+  //   const a = Number(amount.replace(/[^0-9.]/g, '')) || 0;
+  //   if (!t.trim()) {
+  //     setSuggestion(null);
+  //     setAiApplied(false);
+  //     return;
+  //   }
+  //   const id = setTimeout(async () => {
+  //     try {
+  //       const res = await classify(t, a);
+  //       if (!mounted) return;
+  //       if (res.confidence >= 0.8) {
+  //         // auto apply
+  //         const cat = categories.find((c) => c.name === res.category);
+  //         if (cat) setSelectedCategory(cat);
+  //         setSuggestion(res.category ? { category: res.category, confidence: res.confidence } : null);
+  //         setAiApplied(true);
+  //       } else if (res.confidence >= 0.5) {
+  //         setSuggestion({ category: res.category as string, confidence: res.confidence });
+  //         setAiApplied(false);
+  //       } else {
+  //         setSuggestion(null);
+  //         setAiApplied(false);
+  //       }
+  //     } catch (err) {
+  //       console.warn('AI classify failed', err);
+  //     }
+  //   }, 450);
+  //   return () => { mounted = false; clearTimeout(id); };
+  // }, [title, amount]);
 
   const handleSave = async () => {
     if (!amount || !selectedCategory || isSaving) return Alert.alert("Error", "Please fill amount and category.");
@@ -50,6 +87,10 @@ export default function AddExpenseScreen() {
       date: date.toISOString(),
       category: selectedCategory.name,
       user_id: user?.id,
+      // ai_category: suggestion?.category ?? null,
+      // ai_confidence: suggestion?.confidence ?? null,
+      // ai_applied: aiApplied || false,
+      // source: 'manual',
     };
     console.log("Saving transaction:", transaction);
     try {
@@ -76,6 +117,11 @@ export default function AddExpenseScreen() {
     setDate(tx.date ? new Date(tx.date) : new Date());
     const cat = categories.find((c) => c.name === (tx.category || tx.name));
     if (cat) setSelectedCategory(cat);
+    // prefill ai suggestion info if present
+    // if (tx.ai_category) {
+    //   setSuggestion({ category: tx.ai_category, confidence: tx.ai_confidence || 0 });
+    //   setAiApplied(Boolean(tx.ai_applied));
+    // }
   }, [id, transactions]);
   const { classFor } = useResolvedTheme();
 
@@ -112,6 +158,35 @@ export default function AddExpenseScreen() {
             onChangeText={setTitle}
           />
         </View>
+
+        {/* AI Suggestion Row */}
+        {/* suggestion && suggestion.confidence >= 0.5 ? (
+          <View className="flex-row items-center justify-between mt-3 mb-1">
+            <View style={{ flex: 1 }}>
+              <Text className={classFor('text-sm text-gray-600','text-sm text-neutral-300')}>Suggested category: </Text>
+              <View className="flex-row items-center mt-1">
+                <View className={`px-3 py-1 rounded-full mr-3 flex-row items-center ${aiApplied ? 'bg-blue-100 border border-blue-500' : 'bg-gray-100'}`}>
+                  <Text className="mr-2">🍽</Text>
+                  <Text className={classFor('text-sm text-gray-800','text-sm text-white')}>{suggestion.category}</Text>
+                  <View className="ml-2 px-2 py-0.5 bg-yellow-200 rounded-full">
+                    <Text className="text-xs text-yellow-800">AI</Text>
+                  </View>
+                </View>
+                <Text className={classFor('text-xs text-gray-500','text-xs text-neutral-400')}>{suggestion.confidence >= 0.8 ? 'Auto-applied' : `${Math.round(suggestion.confidence * 100)}%`}</Text>
+              </View>
+            </View>
+            {!aiApplied && suggestion.confidence < 0.8 ? (
+              <TouchableOpacity onPress={() => {
+                // apply suggestion
+                const cat = categories.find((c) => c.name === suggestion.category);
+                if (cat) setSelectedCategory(cat);
+                setAiApplied(true);
+              }} className="bg-blue-600 px-3 py-1 rounded-full">
+                <Text className="text-white">Apply</Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+        ) : null */}
 
 
         {/* Category */}

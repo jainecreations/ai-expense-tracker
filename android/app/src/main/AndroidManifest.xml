@@ -29,6 +29,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="ai-expense-manager" android:host="auth"/>
         <data android:scheme="exp+ai-expense-manager"/>
+        <data android:scheme="exp+ai-expense-manager" android:host="expo-development-client"/>
       </intent-filter>
     </activity>
   </application>

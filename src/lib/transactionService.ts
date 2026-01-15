@@ -8,6 +8,12 @@ export type TransactionInput = {
   category: string;
   user_id?: string; // optional user id to associate transaction with a user
   id?: string;
+  // AI suggestions
+  // ai_category?: string | null;
+  // ai_confidence?: number | null;
+  // ai_applied?: boolean | null;
+  // // source of transaction
+  // source?: 'manual' | 'sms' | 'receipt' | 'recurring' | 'import' | string;
 };
 
 export const addTransactionToSupabase = async (transaction: TransactionInput) => {

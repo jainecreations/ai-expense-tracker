@@ -22,3 +22,35 @@ allprojects {
 
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
+
+// Ensure Java 11 compatibility for all Android subprojects (helps compiling
+// node_modules that use Java 9+ source). This is important for EAS/local builds
+// where some libraries may not declare compileOptions themselves.
+subprojects.each { proj ->
+  try {
+    // If the android extension exists on this subproject, set compileOptions
+    if (proj.extensions.findByName('android')) {
+      // enforce a modern compileSdkVersion for subprojects that don't declare it
+      try {
+        proj.android.compileSdkVersion = 33
+      } catch (e) {
+        // older plugin variants may use 'compileSdk'
+        try { proj.android.compileSdk = 33 } catch (e2) { }
+      }
+
+      proj.android.compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+      }
+
+      // If Kotlin plugin present, set JVM target
+      proj.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+          jvmTarget = '11'
+        }
+      }
+    }
+  } catch (e) {
+    // ignore failures for projects that don't expose android/kotlin plugins
+  }
+}

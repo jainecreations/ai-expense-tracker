@@ -34,3 +34,13 @@ create table if not exists recurring_expenses (
   skipped boolean not null default false,
   created_at timestamptz default now()
 );
+
+-- Add AI suggestion and source columns to transactions
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS ai_category text;
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS ai_confidence double precision;
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS ai_applied boolean DEFAULT false;
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS source text; -- 'manual','sms','receipt','recurring','import'
