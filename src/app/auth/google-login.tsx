@@ -7,10 +7,12 @@ import { Text } from '@react-navigation/elements';
 // import { Image } from 'expo-image';
 import * as WebBrowser from "expo-web-browser";
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function GoogleSignInButton() {
+  const router = useRouter();
 
   function extractParamsFromUrl(url: string) {
     const parsedUrl = new URL(url);
@@ -68,6 +70,8 @@ export default function GoogleSignInButton() {
           refresh_token: params.refresh_token,
         });
         console.debug('onSignInButtonPress - setSession - success', { data, error });
+        // navigate to the nested profile tab using an absolute path
+        router.replace("/(tabs)");
         return;
       } else {
         console.error('onSignInButtonPress - setSession - failed');

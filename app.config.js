@@ -10,7 +10,8 @@ export default {
   expo: {
     name: "ai-expense-manager",
     slug: "ai-expense-manager",
-  plugins: ["expo-web-browser", "expo-dev-client"],
+    scheme: "ai-expense-manager",
+    plugins: ["expo-web-browser", "expo-dev-client"],
     android: {
       package: "com.anonymous.aiexpensemanager",
     },

@@ -53,7 +53,7 @@ export default function SignInScreen() {
   <View className={`${classFor('flex-row items-center border border-gray-300 rounded-xl px-4 mb-4','flex-row items-center border border-gray-700 rounded-xl px-4 mb-4')}`}>
         <Ionicons name="mail-outline" size={20} color="gray" />
         <TextInput
-          className="flex-1 py-3 px-2 text-lg"
+          className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
           placeholder="Enter your email"
           placeholderTextColor="#9CA3AF"
           keyboardType="email-address"

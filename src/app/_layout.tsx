@@ -3,9 +3,14 @@ import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuthStore } from "@/store/authStore";
-import { View, ActivityIndicator, Platform, useColorScheme } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  Platform,
+  useColorScheme,
+} from "react-native";
 import { useThemeStore } from "@/store/themeStore";
-import SmsListener from "@/components/SmsListener";
+// import SmsListener from "@/components/SmsListener";
 
 export default function Layout() {
   const { user, setUser, loading, setLoading } = useAuthStore();
@@ -23,9 +28,11 @@ export default function Layout() {
 
     initSession();
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-    });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+      },
+    );
 
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -51,36 +58,41 @@ export default function Layout() {
 
   const appearance = useThemeStore((s) => s.appearance);
   const sys = useColorScheme();
-  const resolved = appearance === 'system' ? (sys || 'light') : appearance;
+  const resolved = appearance === "system" ? sys || "light" : appearance;
 
   if (loading || !isMounted) {
     return (
-      <View className={`flex-1 justify-center items-center ${resolved === 'dark' ? 'bg-neutral-900' : 'bg-white'}`}>
-        <ActivityIndicator size="large" color={resolved === 'dark' ? '#fff' : '#000'} />
+      <View
+        className={`flex-1 justify-center items-center ${resolved === "dark" ? "bg-neutral-900" : "bg-white"}`}
+      >
+        <ActivityIndicator
+          size="large"
+          color={resolved === "dark" ? "#fff" : "#000"}
+        />
       </View>
     );
   }
 
   return (
     <>
-      {Platform.OS === 'android' ? <SmsListener /> : null}
+      {/* {Platform.OS === 'android' ? <SmsListener /> : null} */}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="auth/signin" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="add-expense"
-        options={{
-          presentation: "modal",
-          title: "Add Expense",
-        }}
-      />
-      <Stack.Screen
-        name="profile"
-        options={{
-          presentation: "modal",
-          title: "Profile",
-        }}
-      />
+        <Stack.Screen name="auth/signin" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="add-expense"
+          options={{
+            presentation: "modal",
+            title: "Add Expense",
+          }}
+        />
+        <Stack.Screen
+          name="profile"
+          options={{
+            presentation: "modal",
+            title: "Profile",
+          }}
+        />
       </Stack>
     </>
   );

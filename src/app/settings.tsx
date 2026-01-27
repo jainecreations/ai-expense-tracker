@@ -211,13 +211,13 @@ export default function SettingsScreen() {
                         <Switch value={overspendAlerts} onValueChange={toggleOverspend} />
                     </View>
 
-                    <View className="flex-row items-center justify-between py-3">
+                    {/* <View className="flex-row items-center justify-between py-3">
                         <View style={{ flex: 1 }}>
                             <Text className={classFor('text-base','text-base text-white')}>Smart SMS Capture</Text>
                             <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>Read transaction SMS to auto-add expenses. (Android only)</Text>
                         </View>
                         <Switch value={smartSmsEnabled} onValueChange={toggleSmartSms} />
-                    </View>
+                    </View> */}
                 </View>
 
                 {/* Data & Backup */}
