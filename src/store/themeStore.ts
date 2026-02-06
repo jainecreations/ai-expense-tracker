@@ -12,7 +12,7 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  appearance: "system",
+  appearance: "light",
   setAppearance: async (a: Appearance) => {
     set({ appearance: a });
     try {

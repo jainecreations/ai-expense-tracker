@@ -126,7 +126,7 @@ export default function MonthlyBudget() {
         {/* Header */}
         <View className="flex-row items-center my-4">
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="gray" />
+            <Ionicons name="arrow-back" size={24} color={`${classFor('#777', '#fff')}`} />
           </TouchableOpacity>
           <Text
             className={classFor(

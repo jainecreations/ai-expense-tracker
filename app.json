@@ -15,7 +15,7 @@
     "expo-web-browser",
     "@react-native-google-signin/google-signin"
   ],
-  "name": "ai-expense-manager",
+  "name": "Expense Tracker",
   "slug": "ai-expense-manager",
   "expo": {
     "scheme": "ai-expense-manager",

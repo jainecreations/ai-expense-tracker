@@ -8,8 +8,7 @@ import {
   RefreshControl,
   TextInput,
   Modal,
-  TouchableOpacity,
-  SafeAreaView,
+  TouchableOpacity
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
@@ -20,6 +19,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 import useResolvedTheme from '@/hooks/useResolvedTheme';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RecentTransactions() {
   const user = useAuthStore((s) => s.user);
@@ -203,7 +203,7 @@ export default function RecentTransactions() {
 
       {/* Filter modal */}
       <Modal visible={filterVisible} animationType="slide" transparent>
-        <View className="flex-1 justify-end bg-black bg-opacity-30">
+        <View className="flex-1 justify-end bg-black bg-opacity-30 pb-safe">
           <View className={classFor('bg-white rounded-t-2xl p-4','bg-neutral-800 rounded-t-2xl p-4')}>
             <Text className={classFor('text-lg font-semibold mb-3 text-gray-800','text-lg font-semibold mb-3 text-white')}>Filters</Text>
 

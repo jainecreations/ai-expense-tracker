@@ -16,6 +16,8 @@ import { useBudgetStore } from '@/store/budgetStore';
 import { getCategoryColor } from "@/utils/helper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useResolvedTheme from '@/hooks/useResolvedTheme';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const screenWidth = Dimensions.get("window").width - 32;
 
@@ -24,6 +26,7 @@ function formatMonthLabel(date: Date) {
 }
 
 export default function Insights() {
+  const router = useRouter();
   const transactions = useTransactionStore((state) => state.transactions) as any[];
   const [currentMonth, setCurrentMonth] = useState(() => new Date());
 
@@ -162,7 +165,20 @@ export default function Insights() {
     <SafeAreaView className={`flex-1 ${classFor('bg-white','bg-neutral-900')}`}>
       <ScrollView className={`${classFor('flex-1 bg-white','flex-1 bg-neutral-900')} px-4 py-6`}>
         {/* Header */}
-        <Text className={classFor('text-3xl font-bold text-gray-800 mb-4','text-3xl font-bold text-white mb-4')}>Insights</Text>
+        <View className="flex-row items-center my-4">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={`${classFor('#777', '#fff')}`} />
+          </TouchableOpacity>
+          <Text
+            className={classFor(
+              'flex-1 text-center text-2xl font-bold text-gray-800',
+              'flex-1 text-center text-2xl font-bold text-white'
+            )}
+          >
+            Insights
+          </Text>
+        </View>
+        {/* <Text className={classFor('text-3xl font-bold text-gray-800 mb-4','text-3xl font-bold text-white mb-4')}>Insights</Text> */}
 
         {/* Alert banner (if any) */}
         {showBanner && (

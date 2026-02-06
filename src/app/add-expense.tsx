@@ -84,16 +84,16 @@ export default function AddExpenseScreen() {
       <View>
         {/* Header */}
         <View className="flex-row items-center my-4">
-          <Ionicons onPress={() => router.back()} name="arrow-back-outline" size={24} color="#000" />
+          <Ionicons onPress={() => router.back()} name="arrow-back-outline" size={24} color={`${classFor('#777', '#fff')}`}  />
           <Text className={classFor('flex-1 text-center text-2xl font-bold','flex-1 text-center text-2xl font-bold text-white')}>{isEditing ? "Edit Expense" : "Add Expense"}</Text>
         </View>
 
         {/* Amount */}
   <Text className={classFor('mt-5 mb-2 text-gray-500 font-medium','mt-5 mb-2 text-gray-300 font-medium')}>Amount</Text>
   <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-lg px-4 border-gray-300 border`}>
-          <Text className="text-xl mr-2">₹</Text>
+          <Text className={`${classFor('text-gray-800', 'text-gray-100')} text-xl mr-2`}>₹</Text>
           <TextInput
-            className="text-xl flex-1 py-2"
+            className={`${classFor('text-gray-800', 'text-gray-100')} text-xl flex-1 py-2`}
             placeholder="Enter amount"
             keyboardType="numeric"
             value={amount}
@@ -104,9 +104,9 @@ export default function AddExpenseScreen() {
         {/* Expense Title */}
   <Text className={classFor('mt-5 mb-2 text-gray-500 font-medium','mt-5 mb-2 text-gray-300 font-medium')}>Title (Optional)</Text>
   <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-lg px-4 border-gray-300 border`}>
-          <Ionicons name="document-text-outline" size={20} color="#777" />
+          <Ionicons name="document-text-outline" size={20} color={`${classFor('#777', '#fff')}`} />
           <TextInput
-            className="text-xl flex-1 py-2 ml-2"
+            className={`${classFor('text-gray-800', 'text-gray-100')}  text-xl flex-1 py-2 ml-2`}
             placeholder="What was the expense for?"
             value={title}
             onChangeText={setTitle}

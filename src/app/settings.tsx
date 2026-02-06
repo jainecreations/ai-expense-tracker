@@ -9,7 +9,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useTransactionStore } from "@/store/transactionStore";
 import { Ionicons } from "@expo/vector-icons";
 
-type Appearance = "system" | "light" | "dark";
+type Appearance =  "light" | "dark" | "system";
 
 const APPEARANCE_KEY = "settings:appearance";
 const WEEKLY_KEY = "settings:weeklySummary";
@@ -21,7 +21,7 @@ export default function SettingsScreen() {
     const signOut = useAuthStore((s) => s.signOut);
     const clearTransactions = () => useTransactionStore.setState({ transactions: [] });
 
-    const [appearance, setAppearance] = useState<Appearance>("system");
+    const [appearance, setAppearance] = useState<Appearance>("light");
     const [weeklySummary, setWeeklySummary] = useState(false);
     const [overspendAlerts, setOverspendAlerts] = useState(false);
     const [smartSmsEnabled, setSmartSmsEnabled] = useState(false);

@@ -61,19 +61,19 @@ export default function ProfileScreen() {
         </Text>
       </View> */}
         {/* Header */}
-        <View className="flex-row items-center my-4">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="gray" />
-          </TouchableOpacity>
-          <Text
-            className={classFor(
-              "flex-1 text-center text-2xl font-bold text-gray-800",
-              "flex-1 text-center text-2xl font-bold text-white"
-            )}
-          >
-            Profile
-          </Text>
-        </View>
+        <View className="flex-row items-center my-4 mx-4">
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color={`${classFor('#777', '#fff')}`} />
+            </TouchableOpacity>
+            <Text
+              className={classFor(
+                'flex-1 text-center text-2xl font-bold text-gray-800',
+                'flex-1 text-center text-2xl font-bold text-white'
+              )}
+            >
+              Profile
+            </Text>
+          </View>
 
         {/* Profile Info */}
         <View
@@ -113,7 +113,7 @@ export default function ProfileScreen() {
             onPress={() => router.push("/settings")}
           >
             <Ionicons name="settings-outline" size={22} color={chevronColor} />
-            <Text className="ml-4 text-gray-700 text-base font-medium">
+            <Text className={`${classFor('text-gray-700', 'text-gray-100')} ml-4 text-base font-medium`}>
               Settings
             </Text>
             <View style={{ flex: 1 }} />
@@ -127,7 +127,7 @@ export default function ProfileScreen() {
             <Text style={{ fontSize: 20 }} className="ml-0">
               💰
             </Text>
-            <Text className="ml-4 text-gray-700 text-base font-medium">
+            <Text className={`${classFor('text-gray-700', 'text-gray-100')} ml-4 text-base font-medium`}>
               Category Budgets
             </Text>
             <View style={{ flex: 1 }} />
@@ -141,7 +141,7 @@ export default function ProfileScreen() {
             <Text style={{ fontSize: 20 }} className="ml-0">
               🔁
             </Text>
-            <Text className="ml-4 text-gray-700 text-base font-medium">
+            <Text className={`${classFor('text-gray-700', 'text-gray-100')} ml-4 text-base font-medium`}>
               Recurring Expenses
             </Text>
             <View style={{ flex: 1 }} />
@@ -155,7 +155,7 @@ export default function ProfileScreen() {
             <Text style={{ fontSize: 20 }} className="ml-0">
               📄
             </Text>
-            <Text className="ml-4 text-gray-700 text-base font-medium">
+            <Text className={`${classFor('text-gray-700', 'text-gray-100')} ml-4 text-base font-medium`}>
               Export PDF
             </Text>
             <View style={{ flex: 1 }} />
