@@ -10,7 +10,6 @@ import {
   useColorScheme,
 } from "react-native";
 import { useThemeStore } from "@/store/themeStore";
-// import SmsListener from "@/components/SmsListener";
 
 export default function Layout() {
   const { user, setUser, loading, setLoading } = useAuthStore();
@@ -75,7 +74,6 @@ export default function Layout() {
 
   return (
     <>
-      {/* {Platform.OS === 'android' ? <SmsListener /> : null} */}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth/signin" options={{ headerShown: false }} />
