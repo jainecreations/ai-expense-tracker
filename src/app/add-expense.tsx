@@ -95,6 +95,7 @@ export default function AddExpenseScreen() {
           <TextInput
             className={`${classFor('text-gray-800', 'text-gray-100')} text-xl flex-1 py-2`}
             placeholder="Enter amount"
+            placeholderTextColor="#9CA3AF"
             keyboardType="numeric"
             value={amount}
             onChangeText={setAmount}
@@ -108,6 +109,7 @@ export default function AddExpenseScreen() {
           <TextInput
             className={`${classFor('text-gray-800', 'text-gray-100')}  text-xl flex-1 py-2 ml-2`}
             placeholder="What was the expense for?"
+            placeholderTextColor="#9CA3AF"
             value={title}
             onChangeText={setTitle}
           />

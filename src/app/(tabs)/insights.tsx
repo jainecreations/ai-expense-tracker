@@ -191,11 +191,11 @@ export default function Insights() {
         <View className="flex-row items-center justify-center mb-6">
           <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-full px-3 py-2 shadow`}>
             <TouchableOpacity onPress={prevMonth} className="px-2">
-              <Text className="text-lg">◀</Text>
+              <Text className={classFor('text-gray-800', 'text-gray-100')}>◀</Text>
             </TouchableOpacity>
             <Text className={classFor('px-4 text-gray-700 font-medium','px-4 text-gray-200 font-medium')}>{formatMonthLabel(currentMonth)}</Text>
             <TouchableOpacity onPress={nextMonth} className="px-2">
-              <Text className="text-lg">▶</Text>
+              <Text  className={classFor('text-gray-800', 'text-gray-100')}>▶</Text>
             </TouchableOpacity>
           </View>
         </View>

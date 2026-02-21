@@ -194,14 +194,14 @@ export default function DataBackupScreen() {
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back" size={24} color="gray" />
                 </TouchableOpacity>
-                <Text className={classFor('flex-1 text-center text-2xl font-bold text-gray-800','flex-1 text-center text-2xl font-bold text-white')}>Data & Backup</Text>
+                <Text className={classFor('flex-1 text-center text-2xl font-bold text-gray-800','flex-1 text-center text-2xl font-bold text-gray-100')}>Data & Backup</Text>
             </View>
 
             <View className="space-y-4">
                 {/* Month selector / custom range */}
                 <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 my-4 shadow-lg`}>
                     <View className="flex-row items-center justify-between mb-3">
-                        <Text className="text-lg font-semibold">Report range</Text>
+                        <Text className={classFor("text-lg font-semibold", "text-lg font-semibold text-gray-100")}>Report range</Text>
                         <TouchableOpacity onPress={() => setUseCustomRange((s) => !s)} className="px-3 py-1 rounded-full bg-gray-100">
                             <Text className="text-sm">{useCustomRange ? 'Use Month' : 'Custom range'}</Text>
                         </TouchableOpacity>
@@ -209,11 +209,11 @@ export default function DataBackupScreen() {
                     {!useCustomRange ? (
                         <View className="flex-row items-center justify-between">
                             <TouchableOpacity onPress={() => setSelectedMonth(new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() - 1, 1))} className="px-3 py-2">
-                                <Text>◀</Text>
+                                <Text className={classFor('text-gray-800', 'text-gray-100')}>◀</Text>
                             </TouchableOpacity>
-                            <Text className="text-base font-medium">{selectedMonth.toLocaleString(undefined, { month: 'long', year: 'numeric' })}</Text>
+                            <Text className={classFor('text-base font-medium text-gray-800', 'text-base font-medium text-gray-100')}>{selectedMonth.toLocaleString(undefined, { month: 'long', year: 'numeric' })}</Text>
                             <TouchableOpacity onPress={() => setSelectedMonth(new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 1))} className="px-3 py-2">
-                                <Text>▶</Text>
+                                <Text className={classFor('text-gray-800', 'text-gray-100')}>▶</Text>
                             </TouchableOpacity>
                         </View>
                     ) : (
@@ -235,7 +235,7 @@ export default function DataBackupScreen() {
 
                 <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 my-4 shadow-lg flex-row items-center justify-between`}>
                     <View>
-                        <Text className="text-lg font-semibold">Export Report (PDF)</Text>
+                        <Text className={classFor('text-lg font-semibold text-gray-800', 'text-lg font-semibold text-gray-100')}>Export Report (PDF)</Text>
                         <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-gray-300 mt-1')}>Generate PDF for the selected range</Text>
                     </View>
                     <TouchableOpacity onPress={exportMonthlyPdf} disabled={loadingPdf} className="bg-gray-100 p-3 rounded-full">

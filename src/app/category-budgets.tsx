@@ -114,7 +114,7 @@ export default function CategoryBudgets() {
                             <Text className={classFor('text-lg font-semibold mb-3 text-gray-800', 'text-lg font-semibold mb-3 text-white')}>Set Budget for {selectedCategory}</Text>
                             <View className="flex-row items-center">
                                 <Text className={classFor('text-xl mr-2 text-gray-800', 'text-xl mr-2 text-white')}>₹</Text>
-                                <TextInput value={editValue} onChangeText={setEditValue} keyboardType="numeric" className={classFor('flex-1 py-3 px-3 rounded-lg border border-gray-500 bg-white', 'flex-1 py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800')} placeholder="Enter amount" placeholderTextColor="#9CA3AF" />
+                                <TextInput value={editValue} onChangeText={setEditValue} keyboardType="numeric" className={classFor('flex-1 py-3 px-3 rounded-lg border border-gray-500 bg-white', 'flex-1 py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 text-gray-100')} placeholder="Enter amount" placeholderTextColor="#9CA3AF" />
                             </View>
                             <View className="flex-row justify-end mt-4">
                                 <TouchableOpacity onPress={() => setModalVisible(false)} className="px-4 py-2 mr-2">

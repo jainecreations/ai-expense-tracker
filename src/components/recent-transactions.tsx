@@ -1,3 +1,4 @@
+import React from "react";
 import {
   View,
   Text,
@@ -126,7 +127,7 @@ export default function RecentTransactions() {
         <Text className={classFor('text-lg font-semibold mb-2 text-gray-700','text-lg font-semibold mb-2 text-white')}>Recent Transactions</Text>
 
         {/* Search bar + filter button */}
-        <View className="flex-row items-center mb-3">
+        <View className="flex-row items-center mb-2">
           <View className={`${classFor('flex-1 bg-gray-100','flex-1 bg-neutral-800')} rounded-full px-3 py-2 mr-2 flex-row items-center`}>
             <Ionicons name="search" size={18} color={iconTint} />
             <TextInput

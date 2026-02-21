@@ -1,7 +1,7 @@
+import React from 'react';
 import EmptyListScreen from '@/components/empty-list';
 import HomeMenu from '@/components/home-menu';
 import RecentTransactions from '@/components/recent-transactions';
-import SmartCapturesCard from '@/components/smart-captures-card';
 import { useAuthStore } from '@/store/authStore';
 import { useTransactionStore } from '@/store/transactionStore';
 import { getFirstName } from '@/utils/helper';
@@ -10,12 +10,9 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { useEffect, useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Pressable } from 'react-native';
-import useSmsImportStore from '@/store/smsImportStore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PermissionsAndroid } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -69,7 +66,6 @@ export default function HomeScreen() {
           Total Expenses This Month
         </Text>
       </View>
-      <SmartCapturesCard />
       <View className="flex-1">
         {transactions.length ?
           <RecentTransactions /> :
@@ -77,40 +73,6 @@ export default function HomeScreen() {
       </View>
       {/* Bottom Menu */}
       {menuVisible && <HomeMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />}
-      {/* Dev-only helper: inject a test pending SMS so Smart Captures card appears */}
-      {/* {__DEV__ && (
-        <Pressable
-          onPress={async () => {
-            try {
-              // enable smart sms setting for dev
-              const SMART_SMS_KEY = 'settings:smartSmsCapture';
-              await AsyncStorage.setItem(SMART_SMS_KEY, '1');
-              // request SMS permissions
-              try {
-                const receive = PermissionsAndroid.PERMISSIONS.RECEIVE_SMS;
-                const read = PermissionsAndroid.PERMISSIONS.READ_SMS;
-                await PermissionsAndroid.request(receive);
-                await PermissionsAndroid.request(read);
-              } catch (permErr) {
-                console.warn('Permission request failed', permErr);
-              }
-
-              await useSmsImportStore.getState().addPending({
-                raw_text: 'HDFC: Rs. 499.00 debited at Swiggy on 01 Dec 2025 10:35',
-                amount: 499,
-                title: 'Swiggy',
-                bank: 'HDFC',
-                date: new Date().toISOString(),
-              });
-            } catch (e) {
-              console.warn('Dev helper failed', e);
-            }
-          }}
-          className="absolute bottom-6 right-6 bg-blue-600 rounded-full px-4 py-3 shadow-lg"
-        >
-          <Text className="text-white font-semibold">+SMS</Text>
-        </Pressable>
-      )} */}
     </SafeAreaView>
   );
 }
