@@ -131,13 +131,13 @@ export default function SettingsScreen() {
                 {/* Notifications */}
                 <View className={`${classFor('mb-6 bg-white','mb-6 bg-neutral-800')} rounded-2xl p-4 shadow-sm`}>
                     <Text className={classFor('text-lg font-semibold mb-3','text-lg font-semibold mb-3 text-white')}>Notifications</Text>
-                    <View className="flex-row items-center justify-between py-3">
+                    {/* <View className="flex-row items-center justify-between py-3">
                         <View>
                             <Text className={classFor('text-base','text-base text-white')}>Weekly summary</Text>
                             <Text className={classFor('text-sm text-gray-500','text-sm text-gray-300')}>A weekly email / summary of spending</Text>
                         </View>
                         <Switch value={weeklySummary} onValueChange={toggleWeekly} />
-                    </View>
+                    </View> */}
                     <View className="flex-row items-center justify-between py-3">
                         <View>
                             <Text className={classFor('text-base','text-base text-white')}>Overspending alerts</Text>

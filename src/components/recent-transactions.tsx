@@ -167,8 +167,8 @@ export default function RecentTransactions() {
               <View>
                 <View className="flex-row items-center justify-between py-3">
                   <View className="flex-row items-center">
-                    <View className="w-12 h-12 rounded-full mr-3 flex items-center justify-center" style={{ backgroundColor: getCategoryColor(item.name) }}>
-                      <Ionicons name={getCategoryIcon(item.name) as IoniconName} size={20} color="#fff" />
+                    <View className="w-12 h-12 rounded-full mr-3 flex items-center justify-center" style={{ backgroundColor: getCategoryColor(item.category) }}>
+                      <Ionicons name={getCategoryIcon(item.category) as IoniconName} size={20} color="#fff" />
                     </View>
                     <View>
                         <Text className={classFor('text-gray-800 font-medium','text-white font-medium')}>{item.name}</Text>
