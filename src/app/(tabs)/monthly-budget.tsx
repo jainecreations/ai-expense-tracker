@@ -15,6 +15,8 @@ import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { formatCurrency, getCurrencySymbol } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 
 function monthKey(d = new Date()) {
   return d.toISOString().slice(0, 7); // YYYY-MM
@@ -60,6 +62,9 @@ export default function MonthlyBudget() {
   const spent = monthTx.reduce((s, t) => s + (t.amount || 0), 0);
   const budget = storedBudget || 0;
   const pct = budget > 0 ? Math.round((spent / budget) * 100) : 0;
+  const currency = useCurrencyStore((s) => s.currency);
+  const spentFormatted = formatCurrency(spent, currency);
+  const budgetFormatted = formatCurrency(budget, currency);
 
   // progress color
   const progressColorHex =
@@ -100,9 +105,7 @@ export default function MonthlyBudget() {
 
     Alert.alert(
       'Confirm Budget Update',
-      `Are you sure you want to set your monthly budget to ₹${v.toFixed(
-        0
-      )}?`,
+      `Are you sure you want to set your monthly budget to ${formatCurrency(v, useCurrencyStore((s) => s.currency))}?`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -160,7 +163,7 @@ export default function MonthlyBudget() {
               'text-4xl font-bold text-white mt-2'
             )}
           >
-            ₹{spent.toFixed(0)}
+            {spentFormatted}
           </Text>
 
           <View className="mt-4">
@@ -185,12 +188,12 @@ export default function MonthlyBudget() {
 
             <Text
               className={classFor(
-                'mt-2 text-sm text-gray-600',
-                'mt-2 text-sm text-neutral-300'
-              )}
-            >
-              ₹{spent.toFixed(0)} spent of ₹{budget.toFixed(0)} ({pct}%)
-            </Text>
+                  'mt-2 text-sm text-gray-600',
+                  'mt-2 text-sm text-neutral-300'
+                )}
+              >
+                {spentFormatted} spent of {budgetFormatted} ({pct}%)
+              </Text>
 
             <View className="mt-2">
               {pct >= 100 ? (
@@ -229,12 +232,12 @@ export default function MonthlyBudget() {
           <View className="flex-row items-center">
             <Text
               className={classFor(
-                'text-xl mr-2 text-gray-800',
-                'text-xl mr-2 text-white'
-              )}
-            >
-              ₹
-            </Text>
+                  'text-xl mr-2 text-gray-800',
+                  'text-xl mr-2 text-white'
+                )}
+              >
+                {getCurrencySymbol(currency)}
+              </Text>
 
             <TextInput
               value={editValue}

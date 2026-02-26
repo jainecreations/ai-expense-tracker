@@ -6,6 +6,8 @@ import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { useRecurringStore } from '@/store/recurringStore';
 import { format, parseISO } from 'date-fns';
 import { useRouter } from 'expo-router';
+import { formatCurrency } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 
 export default function RecurringScreen() {
   const router = useRouter();
@@ -75,7 +77,7 @@ export default function RecurringScreen() {
           <View key={r.id} className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 mb-4 shadow`}>
             <View className="flex-row justify-between items-start">
               <View>
-                <Text className={classFor('text-lg font-semibold text-gray-800','text-lg font-semibold text-white')}>{r.name} — ₹{r.amount}</Text>
+                <Text className={classFor('text-lg font-semibold text-gray-800','text-lg font-semibold text-white')}>{r.name} — {formatCurrency(r.amount, useCurrencyStore((s) => s.currency))}</Text>
                 <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-neutral-400 mt-1')}>Repeats: {r.frequency}</Text>
                 <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-neutral-400 mt-1')}>Next: {r.next_date ? format(parseISO(r.next_date), 'dd LLL yyyy') : '—'}</Text>
                 <Text className={classFor('text-sm text-gray-400 mt-1','text-sm text-neutral-500 mt-1')}>Last: {r.last_generated_at ? format(parseISO(r.last_generated_at), 'dd LLL yyyy') : 'Never'}</Text>

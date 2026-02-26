@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Switch, Alert, ScrollView } from "react-n
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useThemeStore } from "@/store/themeStore";
+import { useCurrencyStore } from '@/store/currencyStore';
 import { SafeAreaView } from "react-native-safe-area-context";
 import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { useAuthStore } from "@/store/authStore";
@@ -14,6 +15,7 @@ type Appearance =  "light" | "dark" | "system";
 const APPEARANCE_KEY = "settings:appearance";
 const WEEKLY_KEY = "settings:weeklySummary";
 const OVERSPEND_KEY = "settings:overspendingAlerts";
+const CURRENCY_KEY = "settings:currency";
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -33,13 +35,18 @@ export default function SettingsScreen() {
                 if (w != null) setWeeklySummary(w === "1");
                 const o = await AsyncStorage.getItem(OVERSPEND_KEY);
                 if (o != null) setOverspendAlerts(o === "1");
+                // load currency from persisted storage via store
+                const loadCurrency = useCurrencyStore.getState().loadCurrency;
+                await loadCurrency();
             } catch (err) {
                 console.warn("Failed to load settings", err);
             }
         })();
     }, []);
 
-        const setTheme = useThemeStore((s) => s.setAppearance);
+    const setTheme = useThemeStore((s) => s.setAppearance);
+    const currency = useCurrencyStore((s) => s.currency);
+    const setCurrency = useCurrencyStore((s) => s.setCurrency);
 
         const saveAppearance = async (a: Appearance) => {
             setAppearance(a);
@@ -81,7 +88,7 @@ export default function SettingsScreen() {
                     onPress: async () => {
                         try {
                             // Remove only known settings keys instead of clearing all AsyncStorage
-                            const keysToRemove = [APPEARANCE_KEY, WEEKLY_KEY, OVERSPEND_KEY];
+                            const keysToRemove = [APPEARANCE_KEY, WEEKLY_KEY, OVERSPEND_KEY, CURRENCY_KEY];
                             await AsyncStorage.multiRemove(keysToRemove);
                             clearTransactions();
                             Alert.alert("Cleared", "Selected local settings and cache were cleared.");
@@ -124,6 +131,28 @@ export default function SettingsScreen() {
                         >
                             <Text className={classFor('text-base capitalize','text-base capitalize text-white')}>{opt.replace(/^[a-z]/, (c) => c.toUpperCase())}</Text>
                             <View className={`w-4 h-4 rounded-full ${appearance === opt ? 'bg-blue-500' : 'border border-gray-300'}`} />
+                        </TouchableOpacity>
+                    ))}
+                </View>
+
+                {/* Currency */}
+                <View className={`${classFor('mb-6 bg-white','mb-6 bg-neutral-800')} rounded-2xl p-4 shadow-sm`}>
+                    <Text className={classFor('text-lg font-semibold mb-3','text-lg font-semibold mb-3 text-white')}>Currency</Text>
+                    {([
+                        { code: 'INR', label: 'Indian Rupee (₹)' },
+                        { code: 'USD', label: 'US Dollar ($)' },
+                        { code: 'EUR', label: 'Euro (€)' },
+                        { code: 'GBP', label: 'British Pound (£)' },
+                        { code: 'AUD', label: 'Australian Dollar (A$)' },
+                        { code: 'CAD', label: 'Canadian Dollar (CA$)' },
+                    ] as { code: string; label: string }[]).map((opt) => (
+                        <TouchableOpacity
+                            key={opt.code}
+                            onPress={() => setCurrency(opt.code)}
+                            className="flex-row items-center justify-between py-3"
+                        >
+                            <Text className={classFor('text-base','text-base text-white')}>{opt.label}</Text>
+                            <View className={`w-4 h-4 rounded-full ${currency === opt.code ? 'bg-blue-500' : 'border border-gray-300'}`} />
                         </TouchableOpacity>
                     ))}
                 </View>

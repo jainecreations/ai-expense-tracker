@@ -15,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 type IoniconName = ComponentProps<typeof Ionicons>["name"];
 import { useTransactionStore } from "@/store/transactionStore";
-import { getCategoryColor, getCategoryIcon } from "@/utils/helper";
+import { getCategoryColor, getCategoryIcon, formatCurrency } from "@/utils/helper";
+import { useCurrencyStore } from '@/store/currencyStore';
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
@@ -117,6 +118,7 @@ export default function RecentTransactions() {
 
   // choose some color fallbacks for inline icons/placeholders
   const iconTint = resolved === 'dark' ? '#9CA3AF' : '#6B7280';
+  const currency = useCurrencyStore((s) => s.currency);
 
   return (
     <SafeAreaView className={`flex-1 mx-2 mt-2 rounded-2xl p-2 ${classFor('bg-white','bg-neutral-900')}`}>
@@ -177,7 +179,9 @@ export default function RecentTransactions() {
                   </View>
 
                   <View className="flex-row items-center">
-                    <Text className={classFor('text-gray-900 font-bold','text-white font-bold')}>₹{(item.amount || 0).toFixed(0)}</Text>
+                    <Text className={classFor('text-gray-900 font-bold','text-white font-bold')}>
+                      {formatCurrency(item.amount || 0, currency)}
+                    </Text>
                   </View>
                 </View>
                 <View className={classFor('h-px bg-gray-200','h-px bg-neutral-700')} />

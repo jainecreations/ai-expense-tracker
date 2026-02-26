@@ -3,7 +3,8 @@ import { View, Text, ScrollView, Pressable, Alert, ActivityIndicator } from "rea
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useTransactionStore } from "@/store/transactionStore";
-import { getCategoryColor, getCategoryIcon } from "@/utils/helper";
+import { getCategoryColor, getCategoryIcon, formatCurrency } from "@/utils/helper";
+import { useCurrencyStore } from '@/store/currencyStore';
 import { SafeAreaView } from "react-native-safe-area-context";
 import useResolvedTheme from '@/hooks/useResolvedTheme';
 
@@ -90,7 +91,7 @@ export default function TransactionDetails() {
 
         {/* Amount and category */}
         <View className="items-center mb-6">
-          <Text className={classFor('text-4xl font-bold text-gray-900','text-4xl font-bold text-white')}>₹{(tx.amount || 0).toFixed(2)}</Text>
+          <Text className={classFor('text-4xl font-bold text-gray-900','text-4xl font-bold text-white')}>{formatCurrency((tx.amount || 0), useCurrencyStore((s) => s.currency))}</Text>
           <Text className={classFor('text-gray-600 mt-1','text-gray-300 mt-1')}>{tx.name}</Text>
         </View>
 

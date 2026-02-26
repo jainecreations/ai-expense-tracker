@@ -6,6 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import DateInput from '@/components/date-input';
 import { useTransactionStore } from "@/store/transactionStore";
+import { formatCurrency } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 // We'll require expo modules at runtime to avoid static type issues in the repo
 
 export default function DataBackupScreen() {
@@ -100,8 +102,9 @@ export default function DataBackupScreen() {
                 grandTotal += amt;
             });
 
+            const currency = useCurrencyStore.getState().currency;
             const rowsHtml = Object.entries(totals)
-                .map(([cat, amt]) => `<tr><td style="padding:6px">${cat}</td><td style="padding:6px">₹${amt.toFixed(2)}</td></tr>`)
+                .map(([cat, amt]) => `<tr><td style="padding:6px">${cat}</td><td style="padding:6px">${formatCurrency(amt, currency)}</td></tr>`)
                 .join("");
 
             const periodLabel = useCustomRange && startDate && endDate
@@ -112,7 +115,7 @@ export default function DataBackupScreen() {
             const max = categories.length ? categories[0][1] : 1;
             const bars = categories.map(([cat, amt]) => {
                 const w = Math.round((amt / max) * 300);
-                return `<div style="display:flex;align-items:center;margin-bottom:6px"><div style="width:120px">${cat}</div><div style="flex:1;background:#E5E7EB;border-radius:6px;margin-left:8px"><div style="width:${w}px;background:#3B82F6;height:14px;border-radius:6px"></div></div><div style="width:80px;text-align:right;padding-left:8px">₹${amt.toFixed(0)}</div></div>`;
+                return `<div style="display:flex;align-items:center;margin-bottom:6px"><div style="width:120px">${cat}</div><div style="flex:1;background:#E5E7EB;border-radius:6px;margin-left:8px"><div style="width:${w}px;background:#3B82F6;height:14px;border-radius:6px"></div></div><div style="width:80px;text-align:right;padding-left:8px">${formatCurrency(amt, currency)}</div></div>`;
             }).join("\n");
 
             const html = `
@@ -129,7 +132,7 @@ export default function DataBackupScreen() {
           <body>
             <h1 style="margin-bottom:4px">Monthly Report</h1>
             <div style="color:#6B7280;margin-bottom:12px">${periodLabel}</div>
-            <div style="margin-bottom:12px">Total: <strong>₹${grandTotal.toFixed(2)}</strong></div>
+            <div style="margin-bottom:12px">Total: <strong>${formatCurrency(grandTotal, currency)}</strong></div>
             <h3 style="margin-top:14px">By Category</h3>
             ${bars}
             <h3 style="margin-top:16px">Details</h3>

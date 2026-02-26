@@ -7,6 +7,8 @@ import { useTransactionStore } from '@/store/transactionStore';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/store/authStore';
+import { formatCurrency } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 
 function LoadingDots({ className }: { className?: string }) {
   const [dots, setDots] = useState('');
@@ -169,7 +171,7 @@ D=date or now ISO8601, N=merchant.`
         renderItem={({ item }) => (
           <View className={`${classFor('bg-white', 'bg-neutral-800')} mx-4 my-2 rounded-xl p-4 shadow-sm`}>
             <Text className={classFor('text-base font-semibold text-gray-800', 'text-base font-semibold text-white')}>{item.bank || item.title || 'Bank'}</Text>
-            <Text className={classFor('text-sm text-gray-600 mt-1', 'text-sm text-gray-300 mt-1')}>₹{item.amount}</Text>
+            <Text className={classFor('text-sm text-gray-600 mt-1', 'text-sm text-gray-300 mt-1')}>{formatCurrency(item.amount || 0, useCurrencyStore((s) => s.currency))}</Text>
             <Text className={classFor('text-sm text-gray-500 mt-2', 'text-sm text-gray-300 mt-2')}>{item.raw_text}</Text>
             <View className="flex-row justify-end mt-3">
               <Pressable onPress={() => handleIgnore(item.id)} className="px-3 py-2 mr-2">

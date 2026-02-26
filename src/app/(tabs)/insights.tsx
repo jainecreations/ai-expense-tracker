@@ -18,6 +18,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useResolvedTheme from '@/hooks/useResolvedTheme';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { formatCurrency } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 
 const screenWidth = Dimensions.get("window").width - 32;
 
@@ -205,7 +207,7 @@ export default function Insights() {
           {/* Card 1: Total Expenses */}
           <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg items-center`}>
             <Text className={classFor('text-sm text-gray-400','text-sm text-gray-300')}>Total Expenses This Month</Text>
-            <Text className="text-4xl font-bold text-red-500 mt-2">₹{totalAmount.toFixed(2)}</Text>
+            <Text className="text-4xl font-bold text-red-500 mt-2">{formatCurrency(totalAmount, useCurrencyStore((s) => s.currency))}</Text>
 
             {/* Sparkline */}
             {/* <View className="mt-3">
@@ -250,7 +252,7 @@ export default function Insights() {
           {/* Monthly Summary Card */}
           <View className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 shadow-lg mt-4`}> 
             <Text className={classFor('text-lg font-semibold mb-2 text-gray-700','text-lg font-semibold mb-2 text-white')}>Monthly Summary</Text>
-            <Text className={classFor('text-base text-gray-700','text-base text-white')}>This month, you spent <Text className="font-semibold">₹{Math.round(totalAmount)}</Text>.</Text>
+            <Text className={classFor('text-base text-gray-700','text-base text-white')}>This month, you spent <Text className="font-semibold">{formatCurrency(Math.round(totalAmount), useCurrencyStore((s) => s.currency))}</Text>.</Text>
             {categoryData.length > 0 ? (
               (() => {
                 const top = categoryData[0];
@@ -268,7 +270,7 @@ export default function Insights() {
                 ? 'No monthly budget set.'
                 : totalAmount <= monthlyBudget
                 ? 'You stayed within your monthly budget.'
-                : `You exceeded your monthly budget by ₹${Math.round(totalAmount - (monthlyBudget || 0))}.`}
+                : `You exceeded your monthly budget by ${formatCurrency(Math.round(totalAmount - (monthlyBudget || 0)), useCurrencyStore((s) => s.currency))}.`}
             </Text>
           </View>
 
@@ -302,7 +304,7 @@ export default function Insights() {
                         <View style={{ width: 10, height: 10, backgroundColor: p.color, borderRadius: 3, marginRight: 8 }} />
                         <View>
                           <Text className="text-sm text-gray-700">{p.name}</Text>
-                          <Text className="text-xs text-gray-400">₹{p.amount.toFixed(0)}</Text>
+                          <Text className="text-xs text-gray-400">{formatCurrency(p.amount, useCurrencyStore((s) => s.currency))}</Text>
                         </View>
                       </View>
                     ))}
@@ -324,7 +326,7 @@ export default function Insights() {
                   <View key={c.name} className="flex-row items-center">
                     <View className="w-14">
                       <Text className={classFor('text-sm text-gray-700','text-sm text-white')}>{c.name}</Text>
-                      <Text className={classFor('text-xs text-gray-400','text-xs text-gray-300')}>₹{c.amount.toFixed(0)}</Text>
+                      <Text className={classFor('text-xs text-gray-400','text-xs text-gray-300')}>{formatCurrency(c.amount, useCurrencyStore((s) => s.currency))}</Text>
                     </View>
                     <View className="flex-1 h-8 bg-gray-100 rounded-full overflow-hidden mr-2">
                       <View style={{ width: `${Math.max(8, pct * 100)}%`, height: 32, backgroundColor: getCategoryColor(c.name) }} />

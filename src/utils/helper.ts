@@ -37,3 +37,37 @@ export const getCategoryColor = (name: string): string => {
 export const getFirstName = (fullName: string): string => {
   return fullName?.split(" ")[0] || "User";
 };
+
+export const formatCurrency = (amount: number | string, currency: string = "INR") => {
+  const num = typeof amount === "string" ? Number(amount) : amount;
+  if (isNaN(num)) return String(amount);
+
+  // Try Intl.NumberFormat first
+  try {
+    return new Intl.NumberFormat(undefined, { style: "currency", currency }).format(num);
+  } catch (err) {
+    // Fallback to simple symbol map
+    const symbolMap: Record<string, string> = {
+      INR: "₹",
+      USD: "$",
+      EUR: "€",
+      GBP: "£",
+      AUD: "A$",
+      CAD: "CA$",
+    };
+    const sym = symbolMap[currency] || currency + " ";
+    return `${sym}${num.toFixed(2)}`;
+  }
+};
+
+export const getCurrencySymbol = (currency: string = "INR") => {
+  const symbolMap: Record<string, string> = {
+    INR: "₹",
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    AUD: "A$",
+    CAD: "CA$",
+  };
+  return symbolMap[currency] || currency;
+};

@@ -8,6 +8,8 @@ import { useCategoryBudgetStore } from '@/store/categoryBudgetStore';
 import { format } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { formatCurrency, getCurrencySymbol } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 
 function monthKey(d = new Date()) { return d.toISOString().slice(0, 7); }
 
@@ -84,6 +86,7 @@ export default function CategoryBudgets() {
                         const budget = budgets[c.name] ?? null;
                         const pct = budget && budget > 0 ? Math.round((spent / budget) * 100) : 0;
                         const color = budget && spent > budget ? '#EF4444' : (budget && pct >= 80 ? '#F59E0B' : '#10B981');
+                        const currency = useCurrencyStore((s) => s.currency);
                         return (
                             <View key={c.name} className={`${classFor('bg-white', 'bg-neutral-800')} rounded-2xl p-4 mb-4 shadow-lg`}>
                                 <View className="flex-row items-center justify-between">
@@ -99,7 +102,7 @@ export default function CategoryBudgets() {
                                     }} className={`${classFor('w-full bg-gray-200 h-4 rounded-full overflow-hidden', 'w-full bg-neutral-700 h-4 rounded-full overflow-hidden')}`}>
                                         <Animated.View style={{ width: anims[c.name].interpolate({ inputRange: [0, 1], outputRange: [0, widths[c.name] || 0] }), height: 12, backgroundColor: color, borderRadius: 6 }} />
                                     </View>
-                                    <Text className={classFor('mt-2 text-sm text-gray-600', 'mt-2 text-sm text-neutral-300')}>{budget != null ? `₹${spent.toFixed(0)} / ₹${budget.toFixed(0)} (${pct}%)` : `₹${spent.toFixed(0)} — No budget set`}</Text>
+                                    <Text className={classFor('mt-2 text-sm text-gray-600', 'mt-2 text-sm text-neutral-300')}>{budget != null ? `${formatCurrency(spent, currency)} / ${formatCurrency(budget, currency)} (${pct}%)` : `${formatCurrency(spent, currency)} — No budget set`}</Text>
                                     <Text className={classFor('text-xs mt-1 text-gray-500', 'text-xs mt-1 text-neutral-400')}>{budget != null ? (spent > budget ? 'Over budget' : pct >= 80 ? 'Approaching budget' : 'Good') : 'No budget set'}</Text>
                                 </View>
                             </View>
@@ -113,7 +116,7 @@ export default function CategoryBudgets() {
                         <View className={`${classFor('bg-white', 'bg-neutral-800')} rounded-t-2xl p-4`}>
                             <Text className={classFor('text-lg font-semibold mb-3 text-gray-800', 'text-lg font-semibold mb-3 text-white')}>Set Budget for {selectedCategory}</Text>
                             <View className="flex-row items-center">
-                                <Text className={classFor('text-xl mr-2 text-gray-800', 'text-xl mr-2 text-white')}>₹</Text>
+                                <Text className={classFor('text-xl mr-2 text-gray-800', 'text-xl mr-2 text-white')}>{getCurrencySymbol(useCurrencyStore((s) => s.currency))}</Text>
                                 <TextInput value={editValue} onChangeText={setEditValue} keyboardType="numeric" className={classFor('flex-1 py-3 px-3 rounded-lg border border-gray-500 bg-white', 'flex-1 py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 text-gray-100')} placeholder="Enter amount" placeholderTextColor="#9CA3AF" />
                             </View>
                             <View className="flex-row justify-end mt-4">

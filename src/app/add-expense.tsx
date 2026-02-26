@@ -8,6 +8,8 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import DateInput from "@/components/date-input";
 import { useTransactionStore } from "@/store/transactionStore";
 import { useAuthStore } from "@/store/authStore";
+import { getCurrencySymbol } from '@/utils/helper';
+import { useCurrencyStore } from '@/store/currencyStore';
 
 type Category = {
   name: string;
@@ -91,7 +93,7 @@ export default function AddExpenseScreen() {
         {/* Amount */}
   <Text className={classFor('mt-5 mb-2 text-gray-500 font-medium','mt-5 mb-2 text-gray-300 font-medium')}>Amount</Text>
   <View className={`${classFor('flex-row items-center bg-white','flex-row items-center bg-neutral-800')} rounded-lg px-4 border-gray-300 border`}>
-          <Text className={`${classFor('text-gray-800', 'text-gray-100')} text-xl mr-2`}>₹</Text>
+            <Text className={`${classFor('text-gray-800', 'text-gray-100')} text-xl mr-2`}>{getCurrencySymbol(useCurrencyStore((s) => s.currency))}</Text>
           <TextInput
             className={`${classFor('text-gray-800', 'text-gray-100')} text-xl flex-1 py-2`}
             placeholder="Enter amount"
