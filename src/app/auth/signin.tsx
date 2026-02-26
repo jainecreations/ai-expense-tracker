@@ -9,6 +9,7 @@ import GoogleSignInButton from "./google-login";
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -71,10 +72,17 @@ export default function SignInScreen() {
           className={classFor('flex-1 py-3 px-2 text-lg text-gray-800','flex-1 py-3 px-2 text-lg text-gray-100')}
           placeholder="Enter your password"
           placeholderTextColor="#9CA3AF"
-          secureTextEntry
+          secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
         />
+        <TouchableOpacity
+          onPress={() => setShowPassword((s) => !s)}
+          className="ml-2"
+          accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+        >
+          <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="gray" />
+        </TouchableOpacity>
       </View>
 
         {/* Forgot password link */}
