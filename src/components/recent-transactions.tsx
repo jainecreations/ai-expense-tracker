@@ -121,7 +121,7 @@ export default function RecentTransactions() {
   const currency = useCurrencyStore((s) => s.currency);
 
   return (
-    <SafeAreaView className={`flex-1 mx-2 mt-2 rounded-2xl p-2 ${classFor('bg-white','bg-neutral-900')}`}>
+    <SafeAreaView className={`flex-2 mx-2 rounded-2xl p-2 ${classFor('bg-white','bg-neutral-900')}`}>
       <View className="px-2">
         {/* resolve theme for inner text/colors */}
         {/* use hook locally */}

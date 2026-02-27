@@ -142,7 +142,7 @@ export default function ProfileScreen() {
               🔁
             </Text>
             <Text className={`${classFor('text-gray-700', 'text-gray-100')} ml-4 text-base font-medium`}>
-              Recurring Expenses
+              Subscriptions
             </Text>
             <View style={{ flex: 1 }} />
             <Ionicons name="chevron-forward" size={20} color={chevronColor} />

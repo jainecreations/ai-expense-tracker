@@ -14,10 +14,18 @@ interface HomeMenuProps {
 export default function HomeMenu({ visible, onClose }: HomeMenuProps) {
   const router = useRouter();
   const setUser = useAuthStore((s) => s.setUser);
+  const signOut = useAuthStore((s) => s.signOut);
   const { classFor } = useResolvedTheme();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
+    // await supabase.auth.signOut();
+    await signOut();
+          // redirect to auth screen if appropriate
+          try {
+            router.replace("/auth/signin");
+          } catch (e) {
+            /* noop */
+          }
     setUser(null);
     onClose();
     // Navigation is handled by the root layout when `user` changes.

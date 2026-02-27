@@ -61,7 +61,7 @@ export default function AddExpenseScreen() {
       } else {
         await addTransaction(transaction); // store handles saving flag + supabase call
       }
-      router.back();
+     router.replace("/(tabs)");
     } catch (err) {
       console.log(err);
       Alert.alert("Error", "Failed to save transaction. Please try again.");

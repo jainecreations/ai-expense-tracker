@@ -105,7 +105,7 @@ export default function MonthlyBudget() {
 
     Alert.alert(
       'Confirm Budget Update',
-      `Are you sure you want to set your monthly budget to ${formatCurrency(v, useCurrencyStore((s) => s.currency))}?`,
+      `Are you sure you want to set your monthly budget to ${formatCurrency(v, currency)}?`,
       [
         { text: 'Cancel', style: 'cancel' },
         {

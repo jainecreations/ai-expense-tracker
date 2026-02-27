@@ -289,7 +289,7 @@ export default function DataBackupScreen() {
 
     <!-- Footer -->
     <div class="footer">
-      Generated from Expense Manager App
+      Generated from Expense Buddy App
     </div>
   </body>
 </html>

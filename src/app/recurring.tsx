@@ -8,10 +8,12 @@ import { format, parseISO } from 'date-fns';
 import { useRouter } from 'expo-router';
 import { formatCurrency } from '@/utils/helper';
 import { useCurrencyStore } from '@/store/currencyStore';
+import DateInput from '@/components/date-input';
 
 export default function RecurringScreen() {
   const router = useRouter();
   const { classFor } = useResolvedTheme();
+  const currency = useCurrencyStore((s) => s.currency);
   const { recurring, loadRecurring, addRecurring, deleteRecurring, generateNow, isLoading } = useRecurringStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState('');
@@ -29,12 +31,12 @@ export default function RecurringScreen() {
   ];
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(categories.find((c) => c.name === 'Misc') || null);
   const [frequency, setFrequency] = useState<'daily'|'weekly'|'monthly'>('monthly');
-  const [startDate, setStartDate] = useState(() => format(new Date(), 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => { loadRecurring(); }, []);
 
   const openAdd = () => {
-    setName(''); setAmount(''); setSelectedCategory(categories.find((c) => c.name === 'Misc') || null); setFrequency('monthly'); setStartDate(format(new Date(), 'yyyy-MM-dd'));
+    setName(''); setAmount(''); setSelectedCategory(categories.find((c) => c.name === 'Misc') || null); setFrequency('monthly');
     setModalOpen(true);
   };
 
@@ -49,10 +51,10 @@ export default function RecurringScreen() {
     if (!id) return;
     try {
       await generateNow(id);
-      Alert.alert('Generated', 'Recurring expense added to transactions.');
+      Alert.alert('Generated', 'Subscription added to transactions.');
     } catch (err) {
       console.warn(err);
-      Alert.alert('Error', 'Failed to generate recurring expense.');
+      Alert.alert('Error', 'Failed to add subscription.');
     }
   };
 
@@ -61,7 +63,7 @@ export default function RecurringScreen() {
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View className="flex-row items-center justify-between mb-4">
           <Ionicons onPress={() => router.back()} name="arrow-back-outline" size={24} color="#000" />
-          <Text className={classFor('text-2xl font-bold text-gray-800','text-2xl font-bold text-white')}>Recurring Expenses</Text>
+          <Text className={classFor('text-2xl font-bold text-gray-800','text-2xl font-bold text-white')}>Subscriptions</Text>
           <TouchableOpacity onPress={openAdd} className="bg-blue-600 px-3 py-2 rounded-full">
             <Text className="text-white">Add</Text>
           </TouchableOpacity>
@@ -69,7 +71,7 @@ export default function RecurringScreen() {
 
         {recurring.length === 0 && (
           <View className="py-20">
-            <Text className={classFor('text-center text-gray-600','text-center text-neutral-400')}>No recurring expenses yet. Tap Add to create one.</Text>
+            <Text className={classFor('text-center text-gray-600','text-center text-neutral-400')}>No subscriptions yet. Tap Add to create one.</Text>
           </View>
         )}
 
@@ -77,7 +79,7 @@ export default function RecurringScreen() {
           <View key={r.id} className={`${classFor('bg-white','bg-neutral-800')} rounded-2xl p-4 mb-4 shadow`}>
             <View className="flex-row justify-between items-start">
               <View>
-                <Text className={classFor('text-lg font-semibold text-gray-800','text-lg font-semibold text-white')}>{r.name} — {formatCurrency(r.amount, useCurrencyStore((s) => s.currency))}</Text>
+                <Text className={classFor('text-lg font-semibold text-gray-800','text-lg font-semibold text-white')}>{r.name} — {formatCurrency(r.amount, currency)}</Text>
                 <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-neutral-400 mt-1')}>Repeats: {r.frequency}</Text>
                 <Text className={classFor('text-sm text-gray-500 mt-1','text-sm text-neutral-400 mt-1')}>Next: {r.next_date ? format(parseISO(r.next_date), 'dd LLL yyyy') : '—'}</Text>
                 <Text className={classFor('text-sm text-gray-400 mt-1','text-sm text-neutral-500 mt-1')}>Last: {r.last_generated_at ? format(parseISO(r.last_generated_at), 'dd LLL yyyy') : 'Never'}</Text>
@@ -85,7 +87,7 @@ export default function RecurringScreen() {
               <View className="items-end">
                 {r.active && <View className="bg-green-100 px-2 py-1 rounded-full mb-2"><Text className="text-sm text-green-700">Auto</Text></View>}
                 <TouchableOpacity onPress={() => handleGenerateNow(r.id)} className="bg-blue-600 px-3 py-2 rounded-full mb-2">
-                  <Text className="text-white">Generate now</Text>
+                  <Text className="text-white">Add to transactions</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => deleteRecurring(r.id as string)} className="px-3 py-2">
                   <Text className="text-red-500">Remove</Text>
@@ -100,9 +102,9 @@ export default function RecurringScreen() {
       <Modal visible={modalOpen} animationType="slide" transparent>
         <View className="flex-1 justify-end bg-black bg-opacity-30">
           <View className={`${classFor('bg-white','bg-neutral-800')} rounded-t-2xl p-4`}> 
-            <Text className={classFor('text-lg font-semibold mb-3 text-gray-800','text-lg font-semibold mb-3 text-white')}>Add Recurring Expense</Text>
-            <TextInput value={amount} onChangeText={setAmount} keyboardType="numeric" placeholder="Amount" placeholderTextColor="#9CA3AF" className={classFor('py-3 px-3 rounded-lg border border-gray-300 bg-white mb-3','py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 mb-3')} />
-            <TextInput value={name} onChangeText={setName} placeholder="Title" placeholderTextColor="#9CA3AF" className={classFor('py-3 px-3 rounded-lg border border-gray-300 bg-white mb-3','py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 mb-3')} />
+            <Text className={classFor('text-lg font-semibold mb-3 text-gray-800','text-lg font-semibold mb-3 text-white')}>Add Subscription</Text>
+            <TextInput value={amount} onChangeText={setAmount} keyboardType="numeric" placeholder="Amount" placeholderTextColor="#9CA3AF" className={classFor('py-3 px-3 rounded-lg border border-gray-300 bg-white mb-3','py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 mb-3 text-gray-100')} />
+            <TextInput value={name} onChangeText={setName} placeholder="Title" placeholderTextColor="#9CA3AF" className={classFor('py-3 px-3 rounded-lg border border-gray-300 bg-white mb-3','py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 mb-3 text-gray-100')} />
             <Text className={classFor('mt-2 mb-2 text-gray-500 font-medium','mt-2 mb-2 text-gray-300 font-medium')}>Category</Text>
             <View className="flex-row flex-wrap mt-2 mb-3">
               {categories.map((cat, idx) => (
@@ -124,7 +126,8 @@ export default function RecurringScreen() {
               <TouchableOpacity onPress={() => setFrequency('weekly')} className={`px-3 py-2 rounded-full ${frequency === 'weekly' ? 'bg-blue-600' : classFor('bg-gray-100','bg-neutral-700')}`}><Text className={frequency === 'weekly' ? 'text-white' : classFor('text-gray-800','text-white')}>Weekly</Text></TouchableOpacity>
               <TouchableOpacity onPress={() => setFrequency('monthly')} className={`px-3 py-2 rounded-full ${frequency === 'monthly' ? 'bg-blue-600' : classFor('bg-gray-100','bg-neutral-700')}`}><Text className={frequency === 'monthly' ? 'text-white' : classFor('text-gray-800','text-white')}>Monthly</Text></TouchableOpacity>
             </View>
-            <TextInput value={startDate} onChangeText={setStartDate} placeholder="Start date (YYYY-MM-DD)" placeholderTextColor="#9CA3AF" className={classFor('py-3 px-3 rounded-lg border border-gray-300 bg-white mb-3','py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 mb-3')} />
+            {/* <TextInput value={startDate} onChangeText={setStartDate} placeholder="Start date (YYYY-MM-DD)" placeholderTextColor="#9CA3AF" className={classFor('py-3 px-3 rounded-lg border border-gray-300 bg-white mb-3','py-3 px-3 rounded-lg border border-neutral-700 bg-neutral-800 mb-3')} /> */}
+            <DateInput date={startDate} setDate={setStartDate} />
 
             <View className="flex-row justify-end mt-2">
               <TouchableOpacity onPress={() => setModalOpen(false)} className="px-4 py-2 mr-2">

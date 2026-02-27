@@ -112,7 +112,7 @@ export default function CategoryBudgets() {
 
                 {/* Modal */}
                 <Modal visible={modalVisible} transparent animationType="slide">
-                    <View className="flex-1 justify-end bg-black bg-opacity-30">
+                    <View className="flex-1 justify-end bg-black bg-opacity-30 pb-safe">
                         <View className={`${classFor('bg-white', 'bg-neutral-800')} rounded-t-2xl p-4`}>
                             <Text className={classFor('text-lg font-semibold mb-3 text-gray-800', 'text-lg font-semibold mb-3 text-white')}>Set Budget for {selectedCategory}</Text>
                             <View className="flex-row items-center">
