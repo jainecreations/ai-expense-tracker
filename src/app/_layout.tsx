@@ -84,13 +84,7 @@ export default function Layout() {
             title: "Add Expense",
           }}
         />
-        <Stack.Screen
-          name="profile"
-          options={{
-            presentation: "modal",
-            title: "Profile",
-          }}
-        />
+        {/* profile is a tab inside (tabs) — no separate Stack.Screen needed here */}
       </Stack>
     </>
   );
