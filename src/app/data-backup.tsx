@@ -119,30 +119,181 @@ export default function DataBackupScreen() {
             }).join("\n");
 
             const html = `
-        <html>
-          <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; padding: 20px; }
-              table { width: 100%; border-collapse: collapse; margin-top: 12px }
-              th, td { padding: 8px 6px; }
-              thead { border-bottom: 1px solid #e5e7eb; }
-            </style>
-          </head>
-          <body>
-            <h1 style="margin-bottom:4px">Monthly Report</h1>
-            <div style="color:#6B7280;margin-bottom:12px">${periodLabel}</div>
-            <div style="margin-bottom:12px">Total: <strong>${formatCurrency(grandTotal, currency)}</strong></div>
-            <h3 style="margin-top:14px">By Category</h3>
-            ${bars}
-            <h3 style="margin-top:16px">Details</h3>
-            <table>
-              <thead><tr><th style="text-align:left">Category</th><th style="text-align:right">Amount</th></tr></thead>
-              <tbody>${rowsHtml}</tbody>
-            </table>
-          </body>
-        </html>
-      `;
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+        padding: 24px;
+        color: #111827;
+      }
+
+      .muted { color: #6B7280; }
+      .title { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+      .subtitle { font-size: 14px; margin-bottom: 20px; }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        margin-bottom: 16px;
+        color: #6B7280;
+      }
+
+      .cards {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        flex: 1;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      .card-title {
+        font-size: 12px;
+        color: #6B7280;
+        margin-bottom: 4px;
+      }
+
+      .card-value {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      h3 {
+        margin-top: 24px;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+      }
+
+      th {
+        text-align: left;
+        font-size: 12px;
+        color: #6B7280;
+        border-bottom: 1px solid #E5E7EB;
+        padding-bottom: 6px;
+      }
+
+      td {
+        padding: 8px 0;
+        border-bottom: 1px solid #F3F4F6;
+        font-size: 13px;
+      }
+
+      .amount {
+        text-align: right;
+        font-weight: 500;
+      }
+
+      .bar-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 13px;
+      }
+
+      .bar-label {
+        width: 120px;
+      }
+
+      .bar {
+        flex: 1;
+        background: #E5E7EB;
+        height: 14px;
+        border-radius: 999px;
+        margin: 0 8px;
+      }
+
+      .bar-fill {
+        height: 14px;
+        background: #3B82F6;
+        border-radius: 999px;
+      }
+
+      .footer {
+        margin-top: 32px;
+        font-size: 11px;
+        color: #9CA3AF;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <div class="title">Expense Summary Report</div>
+    <div class="subtitle muted">By Expense Buddy</div>
+
+    <!-- Meta -->
+    <div class="meta">
+      <div>Period: ${periodLabel}</div>
+      <div>Generated: ${new Date().toLocaleDateString()}</div>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Total Spending</div>
+        <div class="card-value">${formatCurrency(grandTotal, currency)}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Transactions</div>
+        <div class="card-value">${monthly.length}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Categories</div>
+        <div class="card-value">${Object.keys(totals).length}</div>
+      </div>
+    </div>
+
+    <!-- Category bars -->
+    <h3>Spending by Category</h3>
+    ${bars}
+
+    <!-- Detailed table -->
+    <h3>Detailed Breakdown</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Date</th>
+          <th class="amount">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${monthly
+          .map((t) => {
+            const label = t.name || t.category || "Other";
+            return `
+              <tr>
+                <td>${label}</td>
+                <td class="muted">${new Date(t.date).toLocaleDateString()}</td>
+                <td class="amount">${formatCurrency(Number(t.amount || 0), currency)}</td>
+              </tr>
+            `;
+          })
+          .join("")}
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div class="footer">
+      Generated from Expense Manager App
+    </div>
+  </body>
+</html>
+`;
 
             const Print: any = require("expo-print");
             const Sharing: any = require("expo-sharing");
